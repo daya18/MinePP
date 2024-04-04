@@ -2,6 +2,8 @@ cmake_minimum_required ( VERSION 3.20 )
 
 project ( MinePP )
 
+set ( CMAKE_CXX_STANDARD 20 )
+
 add_executable ( MinePP )
 
 # Add external dependencies
@@ -11,7 +13,7 @@ add_executable ( MinePP )
 
 	# Add GLAD
 	target_include_directories ( MinePP PRIVATE external/glad/include )
-	target_sources ( MinePP PRIVATE external/glad/src/glad.c )
+	target_sources ( MinePP PRIVATE external/glad/src/glad.c  "source/opengl/VertexArray.cpp" "source/opengl/Type.cpp" "source/opengl/Buffer.cpp")
 	
 	# Add GLM
 	add_subdirectory ( external/glm )
@@ -34,4 +36,4 @@ add_executable ( MinePP )
 
 
 # Set sources
-target_sources ( MinePP PRIVATE source/main.cpp )
+target_sources ( MinePP PRIVATE source/main.cpp  "source/opengl/Shader.cpp")
