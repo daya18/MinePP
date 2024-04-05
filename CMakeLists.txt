@@ -13,7 +13,7 @@ add_executable ( MinePP )
 
 	# Add GLAD
 	target_include_directories ( MinePP PRIVATE external/glad/include )
-	target_sources ( MinePP PRIVATE external/glad/src/glad.c  "source/opengl/VertexArray.cpp" "source/opengl/Type.cpp" "source/opengl/Buffer.cpp")
+	target_sources ( MinePP PRIVATE external/glad/src/glad.c  "source/opengl/VertexArray.cpp" "source/opengl/Type.cpp" "source/opengl/Buffer.cpp" "source/Camera.cpp" "source/main.cpp" "source/Window.cpp")
 	
 	# Add GLM
 	add_subdirectory ( external/glm )
@@ -36,4 +36,4 @@ add_executable ( MinePP )
 
 
 # Set sources
-target_sources ( MinePP PRIVATE source/main.cpp  "source/opengl/Shader.cpp")
+target_sources ( MinePP PRIVATE "source/Application.cpp"  "source/opengl/Shader.cpp" "source/World.cpp")

@@ -5,10 +5,19 @@
 
 namespace mpp
 {
-	VertexArray::VertexArray ( std::vector <AttributeDescription> const & attributeDescriptions )
+	VertexArray::VertexArray ()
 	{
 		glGenVertexArrays ( 1, & vertexArray );
+	}
 
+	VertexArray::VertexArray ( std::vector <AttributeDescription> const & attributeDescriptions )
+		: VertexArray ()
+	{
+		SetFormat ( attributeDescriptions );
+	}
+
+	void VertexArray::SetFormat ( std::vector <AttributeDescription> const & attributeDescriptions )
+	{
 		int attributeIndex { 0 };
 		int offset { 0 };
 		vertexSize = 0;

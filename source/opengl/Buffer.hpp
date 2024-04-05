@@ -9,6 +9,10 @@ namespace mpp
 	{
 	public:
 		Buffer ();
+		
+		template < class ElementType >
+		Buffer ( std::vector <ElementType> const & elements, GLenum usage );
+
 		~Buffer ();
 
 		void SetData ( void const * data, unsigned int size, GLenum usage );
@@ -25,6 +29,13 @@ namespace mpp
 
 
 	// Implementation
+	template < class ElementType >
+	Buffer::Buffer ( std::vector <ElementType> const & elements, GLenum usage )
+		: Buffer ()
+	{
+		SetData ( elements, usage );
+	}
+
 	template < class ElementType >
 	void Buffer::SetData ( std::vector <ElementType> const & elements, GLenum usage )
 	{

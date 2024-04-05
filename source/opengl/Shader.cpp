@@ -6,11 +6,28 @@
 #include <filesystem>
 #include <cassert>
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace mpp
 {
-	Shader::Shader ( std::string const & file )
-		: program ( glCreateProgram () )
+	Shader::Shader ()
 	{
+		program = glCreateProgram ();
+	}
+
+	Shader::Shader ( std::string const & file )
+		: Shader ()
+	{
+		LoadFromFile ( file );
+	}
+
+	Shader::~Shader ()
+	{
+	}
+
+	void Shader::LoadFromFile ( std::string const & file )
+	{
+
 		struct ShaderInfo
 		{
 			GLenum type;
@@ -27,11 +44,11 @@ namespace mpp
 		while ( fileStream.good () )
 		{
 			std::getline ( fileStream, line );
-		
+
 			if ( line.find ( "#shader" ) != line.npos )
 			{
 				GLenum shaderType =
-					  line == "#shader vertex" ? GL_VERTEX_SHADER
+					line == "#shader vertex" ? GL_VERTEX_SHADER
 					: line == "#shader fragment" ? GL_FRAGMENT_SHADER
 					: throw std::runtime_error { "Invalid shader type" };
 
@@ -52,7 +69,7 @@ namespace mpp
 			shaders.push_back ( glCreateShader ( shaderInfo.type ) );
 
 			char const * source { shaderInfo.source.data () };
-			GLint length { static_cast <GLint> ( shaderInfo.source.size () ) };
+			GLint length { static_cast < GLint > ( shaderInfo.source.size () ) };
 			glShaderSource ( shaders.back (), 1, &source, &length );
 
 			glCompileShader ( shaders.back () );
@@ -66,9 +83,9 @@ namespace mpp
 			glDeleteShader ( shader );
 	}
 
-	Shader::~Shader ()
+	void Shader::SetUniform ( std::string const & name, glm::mat4 const & data )
 	{
-
+		glUniformMatrix4fv ( GetUniformLocation ( name ), 1, GL_FALSE, glm::value_ptr ( data ) );
 	}
 
 	void Shader::Bind ()
@@ -76,4 +93,13 @@ namespace mpp
 		glUseProgram ( program );
 	}
 
+	GLint Shader::GetUniformLocation ( std::string const & name )
+	{
+		auto locationIt { uniformLocations.find ( name ) };
+		
+		if ( locationIt == uniformLocations.end () )
+			locationIt = uniformLocations.emplace ( name, glGetUniformLocation ( program, name.data () ) ).first;
+
+		return locationIt->second;
+	}
 }
