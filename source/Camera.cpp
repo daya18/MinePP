@@ -13,14 +13,14 @@
 namespace mpp
 {
 	float const Camera::rotateSensitivity { 0.2f };
-	float const Camera::moveSensitivity { 0.2f };
+	float const Camera::moveSensitivity { 0.02f };
 
 	Camera::Camera ( Window & window, glm::vec3 const & position )
 	:
 		window ( & window ),
 		position ( position ),
 		lookDirection { 0.0f, 0.0f, -1.0f },
-		aspect { 1.0f }
+		aspect { window.GetAspectRatio () }
 	{
 		UpdateViewMatrix ();
 		UpdateProjectionMatrix ();
@@ -50,6 +50,12 @@ namespace mpp
 
 		if ( window->GetkeyState ( GLFW_KEY_A ) )
 			this->position -= moveRightDir * moveSensitivity;
+
+		if ( window->GetkeyState ( GLFW_KEY_LEFT_SHIFT ) )
+			this->position -= up * moveSensitivity;
+
+		if ( window->GetkeyState ( GLFW_KEY_SPACE ) )
+			this->position += up * moveSensitivity;
 
 		UpdateViewMatrix ();
 	}

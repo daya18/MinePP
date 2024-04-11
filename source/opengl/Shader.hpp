@@ -22,6 +22,7 @@ namespace mpp
 		
 		void Bind ();
 
+		void SetUniform ( std::string const &, int );
 		void SetUniform ( std::string const &, glm::mat4 const & );
 		GLint GetUniformLocation ( std::string const & );
 

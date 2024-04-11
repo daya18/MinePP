@@ -13,7 +13,7 @@ add_executable ( MinePP )
 
 	# Add GLAD
 	target_include_directories ( MinePP PRIVATE external/glad/include )
-	target_sources ( MinePP PRIVATE external/glad/src/glad.c  "source/opengl/VertexArray.cpp" "source/opengl/Type.cpp" "source/opengl/Buffer.cpp" "source/Camera.cpp" "source/main.cpp" "source/Window.cpp")
+	target_sources ( MinePP PRIVATE external/glad/src/glad.c  )
 	
 	# Add GLM
 	add_subdirectory ( external/glm )
@@ -34,6 +34,23 @@ add_executable ( MinePP )
 		external/imgui/backends 
 	)
 
+	# Add OBJLoader
+	target_include_directories ( MinePP PRIVATE external/OBJ-Loader/Source )
+
+	# Add stb image
+	target_include_directories ( MinePP PRIVATE external )
 
 # Set sources
-target_sources ( MinePP PRIVATE "source/Application.cpp"  "source/opengl/Shader.cpp" "source/World.cpp")
+target_sources ( MinePP PRIVATE 
+	source/Application.cpp 
+	source/opengl/Shader.cpp 
+	source/World.cpp
+	source/opengl/VertexArray.cpp 
+	source/opengl/Type.cpp
+	source/opengl/Buffer.cpp 
+	source/Camera.cpp 
+	source/main.cpp
+	source/Window.cpp
+	source/WorldRenderer.cpp 
+	source/BlockModel.cpp
+ "source/opengl/Texture.cpp")

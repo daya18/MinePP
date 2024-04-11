@@ -22,11 +22,14 @@ namespace mpp
 		glEnable ( GL_DEBUG_OUTPUT );
 		glDebugMessageCallback ( debugCallback, nullptr );
 
+		glEnable ( GL_DEPTH_TEST );
+		glEnable ( GL_CULL_FACE );
+
 		imguiContext = ImGui::CreateContext ();
 		ImGui_ImplOpenGL3_Init ();
 		window.InitImGuiForOpenGL ();
 
-		world = std::make_unique <World> ( window );
+		world = std::make_unique <World> ( window, blockTypeRegistry, blockModel );
 	}
 	
 	Application::~Application ()
@@ -47,7 +50,7 @@ namespace mpp
 			world->Update ();
 
 			glClearColor ( 0.0f, 0.0f, 0.0f, 1.0f );
-			glClear ( GL_COLOR_BUFFER_BIT );
+			glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 			world->Render ();
 

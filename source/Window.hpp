@@ -22,6 +22,8 @@ namespace mpp
 		void SwapBuffers ();
 		bool GetkeyState ( int key );
 
+		float GetAspectRatio () const;
+
 		void AddMouseMotionCallback ( MouseMotionCallback );
 		void AddKeyCallback ( KeyCallback );
 

@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Camera.hpp"
-#include "opengl/Shader.hpp"
-#include "opengl/VertexArray.hpp"
-#include "opengl/Buffer.hpp"
+#include "WorldRenderer.hpp"
 
 namespace mpp
 {
@@ -12,15 +10,14 @@ namespace mpp
 	class World
 	{
 	public:
-		World ( Window & );
+		World ( Window &, BlockTypeRegistry const &, BlockModel const & );
 
 		void Update ();
 		void Render ();
 
 	private:
-		mpp::Shader shader;
-		mpp::Buffer vertexBuffer;
-		mpp::VertexArray vertexArray;
+
 		Camera camera;
+		WorldRenderer worldRenderer;
 	};
 }

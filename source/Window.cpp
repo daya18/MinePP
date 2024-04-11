@@ -46,6 +46,13 @@ namespace mpp
 	{
 		return glfwGetKey ( window, key );
 	}
+	
+	float Window::GetAspectRatio () const
+	{
+		int width, height;
+		glfwGetWindowSize ( window, &width, &height );
+		return static_cast < float > ( width ) / static_cast < float > ( height );
+	}
 
 	void Window::InitImGuiForOpenGL ()
 	{

@@ -87,6 +87,11 @@ namespace mpp
 	{
 		glUniformMatrix4fv ( GetUniformLocation ( name ), 1, GL_FALSE, glm::value_ptr ( data ) );
 	}
+	
+	void Shader::SetUniform ( std::string const & name, int data )
+	{
+		glUniform1i ( GetUniformLocation ( name ), data );
+	}
 
 	void Shader::Bind ()
 	{
