@@ -51,6 +51,6 @@ target_sources ( MinePP PRIVATE
 	source/Camera.cpp 
 	source/main.cpp
 	source/Window.cpp
-	source/WorldRenderer.cpp 
+	"source/BlockRenderer.cpp" 
 	source/BlockModel.cpp
- "source/opengl/Texture.cpp")
+ "source/opengl/Texture.cpp" "source/Block.cpp")

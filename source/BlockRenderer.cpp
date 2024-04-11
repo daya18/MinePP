@@ -1,11 +1,12 @@
-#include "WorldRenderer.hpp"
+#include "BlockRenderer.hpp"
 
 #include "Camera.hpp"
 #include "BlockModel.hpp"
+#include "Block.hpp"
 
 namespace mpp
 {
-	WorldRenderer::WorldRenderer ( BlockTypeRegistry const &, BlockModel const & blockModel )
+	BlockRenderer::BlockRenderer ( BlockTypeRegistry const &, BlockModel const & blockModel )
 	:
 		vertexBuffer ( blockModel.GetRawVertices (), GL_STATIC_DRAW ),
 		indexBuffer ( blockModel.GetRawIndices (), GL_STATIC_DRAW ),
@@ -17,24 +18,25 @@ namespace mpp
 		vertexArray.BindVertexBuffer ( vertexBuffer );
 	}
 
-	WorldRenderer::~WorldRenderer ()
+	BlockRenderer::~BlockRenderer ()
 	{
 	}
 	
-	void WorldRenderer::SetCamera ( Camera const & camera )
+	void BlockRenderer::SetCamera ( Camera const & camera )
 	{
 		this->camera = & camera;
 	}
 
-	void WorldRenderer::AddBlock ( glm::vec2 const & position, std::string const & type )
+	void BlockRenderer::AddBlock ( Block const & block )
+	{
+		blocks.push_back ( &block );
+	}
+
+	void BlockRenderer::DeleteBlock ( Block const & block )
 	{
 	}
 
-	void WorldRenderer::DeleteBlock ( glm::vec2 const & position )
-	{
-	}
-
-	void WorldRenderer::Render ()
+	void BlockRenderer::Render ()
 	{
 		if ( ! camera ) return;
 
@@ -48,6 +50,10 @@ namespace mpp
 		shader.SetUniform ( "u_sampler", 0 );
 		texture.Bind ( 0 );
 
-		glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
+		for ( auto const & block : blocks )
+		{
+			shader.SetUniform ( "u_modelMatrix", block->GetTransformMatrix () );
+			glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
+		}
 	}
 }

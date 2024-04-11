@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Camera.hpp"
-#include "WorldRenderer.hpp"
+#include "BlockRenderer.hpp"
+#include "Block.hpp"
 
 namespace mpp
 {
@@ -14,10 +15,11 @@ namespace mpp
 
 		void Update ();
 		void Render ();
+		void CreateBlock ( std::string const &, glm::vec3 const & );
 
 	private:
-
 		Camera camera;
-		WorldRenderer worldRenderer;
+		BlockRenderer blockRenderer;
+		std::list <Block> blocks;
 	};
 }

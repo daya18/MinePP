@@ -13,20 +13,22 @@ namespace mpp
 {
 	class BlockTypeRegistry;
 	class BlockModel;
+	class Block;
 
-	class WorldRenderer
+	class BlockRenderer
 	{
 	public:
-		WorldRenderer ( BlockTypeRegistry const &, BlockModel const & );
-		~WorldRenderer ();
+		BlockRenderer ( BlockTypeRegistry const &, BlockModel const & );
+		~BlockRenderer ();
 
 		void SetCamera ( Camera const & );
-		void AddBlock ( glm::vec2 const & position, std::string const & type );
-		void DeleteBlock ( glm::vec2 const & position );
+		void AddBlock ( Block const & );
+		void DeleteBlock ( Block const & );
 
 		void Render ();
 
 	private:
+		BlockModel * blockModel;
 		Camera const * camera { nullptr };
 
 		mpp::Shader shader;
@@ -34,5 +36,7 @@ namespace mpp
 		mpp::Buffer indexBuffer;
 		mpp::VertexArray vertexArray;
 		mpp::Texture texture;
+
+		std::vector <Block const *> blocks;
 	};
 }

@@ -7,9 +7,18 @@ namespace mpp
 	World::World ( Window & window, BlockTypeRegistry const & blockRegistry, BlockModel const & blockModel )
 	:
 		camera ( window, { 0.0f, 0.0f, 5.0f } ),
-		worldRenderer ( blockRegistry, blockModel )
+		blockRenderer ( blockRegistry, blockModel )
 	{
-		worldRenderer.SetCamera ( camera );
+		blockRenderer.SetCamera ( camera );
+
+		CreateBlock ( "Grass", { 0, 0, 0 } );
+		CreateBlock ( "Grass", { 2, 0, 0 } );
+	}
+	
+	void World::CreateBlock ( std::string const & type, glm::vec3 const & position )
+	{
+		blocks.push_back ( { type, position } );
+		blockRenderer.AddBlock ( blocks.back () );
 	}
 
 	void World::Update ()
@@ -19,6 +28,6 @@ namespace mpp
 
 	void World::Render ()
 	{
-		worldRenderer.Render ();
+		blockRenderer.Render ();
 	}
 }
