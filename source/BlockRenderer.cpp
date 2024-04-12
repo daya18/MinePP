@@ -34,6 +34,7 @@ namespace mpp
 
 	void BlockRenderer::DeleteBlock ( Block const & block )
 	{
+		std::erase ( blocks, &block );
 	}
 
 	void BlockRenderer::Render ()

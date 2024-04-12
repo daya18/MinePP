@@ -20,6 +20,9 @@ namespace mpp
 		glm::mat4 const & GetViewMatrix () const;
 		glm::mat4 const & GetProjectionMatrix () const;
 
+		glm::vec3 const & GetPosition () const;
+		glm::vec3 const & GetLookDirection () const;
+
 	private:
 		void OnMouseMove ( glm::vec2 const & delta );
 
@@ -45,5 +48,7 @@ namespace mpp
 	// Implementation
 	inline glm::mat4 const & Camera::GetViewMatrix () const { return viewMatrix; }
 	inline glm::mat4 const & Camera::GetProjectionMatrix () const { return projectionMatrix; }
+	inline glm::vec3 const & Camera::GetPosition () const { return position; }
+	inline glm::vec3 const & Camera::GetLookDirection () const { return lookDirection; }
 
 }

@@ -53,4 +53,4 @@ target_sources ( MinePP PRIVATE
 	source/Window.cpp
 	"source/BlockRenderer.cpp" 
 	source/BlockModel.cpp
- "source/opengl/Texture.cpp" "source/Block.cpp")
+ "source/opengl/Texture.cpp" "source/Block.cpp" "source/BlockRayCaster.cpp")

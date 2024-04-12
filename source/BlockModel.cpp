@@ -21,20 +21,25 @@ namespace mpp
 
 		for ( auto const & vertex : loader.LoadedVertices )
 		{
-			vertices.push_back ( vertex.Position.X );
-			vertices.push_back ( vertex.Position.Y );
-			vertices.push_back ( vertex.Position.Z );
+			rawVertices.push_back ( vertex.Position.X );
+			rawVertices.push_back ( vertex.Position.Y );
+			rawVertices.push_back ( vertex.Position.Z );
 
-			vertices.push_back ( vertex.TextureCoordinate.X );
-			vertices.push_back ( vertex.TextureCoordinate.Y );
+			rawVertices.push_back ( vertex.TextureCoordinate.X );
+			rawVertices.push_back ( vertex.TextureCoordinate.Y );
 		}
 
 		for ( auto const & index : loader.LoadedIndices )
-			indices.push_back ( index );
+			rawIndices.push_back ( index );
 
-		for ( auto const & mesh : loader.LoadedMeshes )
+		for ( auto const & faceMesh : loader.LoadedMeshes )
 		{
-			auto meshFaceDirectionIt { meshNameFaceDirections.find ( mesh.MeshName ) };
+			auto meshFaceDirectionIt { meshNameFaceDirections.find ( faceMesh.MeshName ) };
+
+			if ( meshFaceDirectionIt == meshNameFaceDirections.end () )
+				throw std::runtime_error { "Face mesh name '" + faceMesh.MeshName + "' invalid" };
+
+			auto faceDirection { meshFaceDirectionIt->second };
 		}
 	}
 }

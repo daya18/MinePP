@@ -1,5 +1,7 @@
 #include "World.hpp"
 
+#include <iostream>
+
 #include "Window.hpp"
 
 namespace mpp
@@ -19,11 +21,16 @@ namespace mpp
 	{
 		blocks.push_back ( { type, position } );
 		blockRenderer.AddBlock ( blocks.back () );
+		blockRayCaster.AddBlock ( blocks.back () );
+
+		std::cout << & blocks.back () << std::endl;
 	}
 
 	void World::Update ()
 	{
 		camera.Update ();
+
+		auto intersection { blockRayCaster.CheckRayIntersection ( { camera.GetPosition (), glm::normalize ( camera.GetLookDirection () ) } ) };
 	}
 
 	void World::Render ()

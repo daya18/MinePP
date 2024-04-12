@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Camera.hpp"
-#include "BlockRenderer.hpp"
 #include "Block.hpp"
+#include "BlockRenderer.hpp"
+#include "BlockRayCaster.hpp"
 
 namespace mpp
 {
@@ -19,7 +20,8 @@ namespace mpp
 
 	private:
 		Camera camera;
-		BlockRenderer blockRenderer;
 		std::list <Block> blocks;
+		BlockRenderer blockRenderer;
+		BlockRayCaster blockRayCaster;
 	};
 }
