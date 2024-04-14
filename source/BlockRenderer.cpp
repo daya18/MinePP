@@ -17,9 +17,9 @@ namespace mpp
 
 		std::vector <float> vertices
 		{
-			-1, -1,  1,   faceTextureSize.x * 1, faceTextureSize.y * 1,    0, 0,
-			-1,  1,  1,   faceTextureSize.x * 1, faceTextureSize.y * 2,	   0, 1,
 			 1,  1,  1,   faceTextureSize.x * 2, faceTextureSize.y * 2,    1, 1,
+			-1,  1,  1,   faceTextureSize.x * 1, faceTextureSize.y * 2,	   0, 1,
+			-1, -1,  1,   faceTextureSize.x * 1, faceTextureSize.y * 1,    0, 0,
 			 1, -1,  1,   faceTextureSize.x * 2, faceTextureSize.y * 1,    1, 0,
 					      
 			-1, -1, -1,   faceTextureSize.x * 2, faceTextureSize.y * 0,    1, 0,
@@ -27,9 +27,9 @@ namespace mpp
 			 1,  1, -1,   faceTextureSize.x * 1, faceTextureSize.y * 1,    0, 1,
 			 1, -1, -1,   faceTextureSize.x * 1, faceTextureSize.y * 0,    0, 0,
 
-			-1, -1, -1,   faceTextureSize.x * 0, faceTextureSize.y * 1,    0, 0,
-			-1,  1, -1,   faceTextureSize.x * 0, faceTextureSize.y * 2,    0, 1,
 			-1,  1,  1,   faceTextureSize.x * 1, faceTextureSize.y * 2,    1, 1,
+			-1,  1, -1,   faceTextureSize.x * 0, faceTextureSize.y * 2,    0, 1,
+			-1, -1, -1,   faceTextureSize.x * 0, faceTextureSize.y * 1,    0, 0,
 			-1, -1,  1,   faceTextureSize.x * 1, faceTextureSize.y * 1,    1, 0,
 			
 			 1, -1, -1,   faceTextureSize.x * 3, faceTextureSize.y * 1,    1, 0,
@@ -42,9 +42,9 @@ namespace mpp
 			 1,  1,  1,   faceTextureSize.x * 1, faceTextureSize.y * 0,    1, 0,
 			 1,  1, -1,   faceTextureSize.x * 1, faceTextureSize.y * 1,    1, 1,
 																	       
-			-1, -1, -1,   faceTextureSize.x * 2, faceTextureSize.y * 0,    0, 0,
-			-1, -1,  1,   faceTextureSize.x * 2, faceTextureSize.y * 1,    0, 1,
 			 1, -1,  1,   faceTextureSize.x * 3, faceTextureSize.y * 1,    1, 1,
+			-1, -1,  1,   faceTextureSize.x * 2, faceTextureSize.y * 1,    0, 1,
+			-1, -1, -1,   faceTextureSize.x * 2, faceTextureSize.y * 0,    0, 0,
 			 1, -1, -1,   faceTextureSize.x * 3, faceTextureSize.y * 0,    1, 0,
 
 		};
@@ -109,7 +109,7 @@ namespace mpp
 
 	void BlockRenderer::Render ()
 	{
-		//glEnable ( GL_CULL_FACE );
+		glEnable ( GL_CULL_FACE );
 
 		if ( ! camera ) return;
 
@@ -140,5 +140,7 @@ namespace mpp
 
 			glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
 		}
+
+		glDisable ( GL_CULL_FACE );
 	}
 }
