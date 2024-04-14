@@ -32,4 +32,14 @@ namespace mpp
 		{ Directions::forward, "Forward" },
 		{ Directions::back, "Back" },
 	};
+
+	inline std::unordered_map <Directions, glm::vec3> directionVectors
+	{
+		{ Directions::forward,	DirectionVectors::forward	},
+		{ Directions::back,		DirectionVectors::back		},
+		{ Directions::up,		DirectionVectors::up		},
+		{ Directions::down,		DirectionVectors::down		},
+		{ Directions::left,		DirectionVectors::left		},
+		{ Directions::right,	DirectionVectors::right		},
+	};
 }

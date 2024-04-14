@@ -52,5 +52,5 @@ target_sources ( MinePP PRIVATE
 	source/main.cpp
 	source/Window.cpp
 	"source/BlockRenderer.cpp" 
-	source/BlockModel.cpp
- "source/opengl/Texture.cpp" "source/Block.cpp" "source/BlockRayCaster.cpp")
+	
+ "source/opengl/Texture.cpp" "source/Block.cpp" "source/BlockRayCaster.cpp" "source/Transform.cpp" "source/Scene.cpp" "source/HUD.cpp" "source/gui/Rectangle.cpp" "source/gui/RectangleRenderer.cpp")

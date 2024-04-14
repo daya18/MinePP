@@ -4,7 +4,6 @@
 #include <limits>
 
 #include "Block.hpp"
-#include "BlockModel.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/intersect.hpp>
@@ -48,7 +47,7 @@ namespace mpp
 		// TO DO: Make this a method in a dedicated transform class
 
 		for ( auto & blockVertex : data.vertices )
-			blockVertex = block.GetTransformMatrix () * glm::vec4 ( blockVertex, 1.0f );
+			blockVertex = block.GetTransform().GetMatrix () * glm::vec4 ( blockVertex, 1.0f );
 
 		blockDatas.emplace ( &block, data );
 	}

@@ -12,11 +12,12 @@ namespace mpp
 		std::cout << "GLFW initialization " << ( glfwInitResult ? "successful" : "failed" ) << std::endl;
 
 		glfwWindowHint ( GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE );
-		window = glfwCreateWindow ( 1280, 720, "MinePP", nullptr, nullptr );
+		window = glfwCreateWindow ( size.x, size.y, title.data (), nullptr, nullptr);
 
 		glfwSetWindowUserPointer ( window, this );
 
 		glfwSetKeyCallback ( window, GLFWKeyCallback );
+		glfwSetMouseButtonCallback ( window, GLFWButtonCallback );
 		glfwSetCursorPosCallback ( window, GLFWCursorPositionCallback );
 		glfwSetCursorEnterCallback ( window, GLFWCursorEnterCallback );
 
@@ -50,8 +51,15 @@ namespace mpp
 	float Window::GetAspectRatio () const
 	{
 		int width, height;
-		glfwGetWindowSize ( window, &width, &height );
+		glfwGetFramebufferSize ( window, &width, &height );
 		return static_cast < float > ( width ) / static_cast < float > ( height );
+	}
+	
+	glm::vec2 Window::GetSize () const
+	{
+		glm::ivec2 size;
+		glfwGetFramebufferSize ( window, &size.x, &size.y );
+		return size;
 	}
 
 	void Window::InitImGuiForOpenGL ()
@@ -65,6 +73,14 @@ namespace mpp
 		
 		for ( auto const & keyCallback : window.keyCallbacks )
 			keyCallback ( key, action );
+	}
+
+	void Window::GLFWButtonCallback ( GLFWwindow * glfwWindow, int button, int action, int mods )
+	{
+		auto & window { *GetWindow ( glfwWindow ) };
+
+		for ( auto const & buttonCallback : window.buttonCallbacks )
+			buttonCallback ( button, action );
 	}
 
 	void Window::GLFWCursorPositionCallback ( GLFWwindow * glfwWindow, double xpos, double ypos )

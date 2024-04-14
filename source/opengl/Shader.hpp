@@ -24,9 +24,10 @@ namespace mpp
 
 		void SetUniform ( std::string const &, int );
 		void SetUniform ( std::string const &, glm::mat4 const & );
-		GLint GetUniformLocation ( std::string const & );
+		void SetUniform ( std::string const &, std::vector <glm::mat4> const & );
 
 	private:
+		GLint GetUniformLocation ( std::string const & );
 		GLuint program;
 		std::unordered_map < std::string, GLint > uniformLocations;
 	};

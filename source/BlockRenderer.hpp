@@ -12,13 +12,12 @@
 namespace mpp
 {
 	class BlockTypeRegistry;
-	class BlockModel;
 	class Block;
 
 	class BlockRenderer
 	{
 	public:
-		BlockRenderer ( BlockTypeRegistry const &, BlockModel const & );
+		BlockRenderer ( BlockTypeRegistry const & );
 		~BlockRenderer ();
 
 		void SetCamera ( Camera const & );
@@ -28,7 +27,6 @@ namespace mpp
 		void Render ();
 
 	private:
-		BlockModel * blockModel;
 		Camera const * camera { nullptr };
 
 		mpp::Shader shader;
@@ -36,6 +34,7 @@ namespace mpp
 		mpp::Buffer indexBuffer;
 		mpp::VertexArray vertexArray;
 		mpp::Texture texture;
+		mpp::Texture outlineMask;
 
 		std::vector <Block const *> blocks;
 	};
