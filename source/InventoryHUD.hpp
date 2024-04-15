@@ -6,12 +6,13 @@
 
 namespace mpp
 {
+	class BlockCache;
 	class RectangleRenderer;
 
 	class InventoryHUD
 	{
 	public:
-		InventoryHUD ( RectangleRenderer & );
+		InventoryHUD ( BlockCache &, RectangleRenderer & );
 
 		void SetItemSlotContents ( int slotIndex, std::string const & itemType, int itemCount );
 		void SelectItemSlot ( int index );
@@ -27,6 +28,7 @@ namespace mpp
 
 		void Initialize ();
 
+		BlockCache * blockCache;
 		RectangleRenderer * rectangleRenderer;
 		Rectangle background;
 		std::vector <Rectangle> itemSlots;

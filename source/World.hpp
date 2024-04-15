@@ -6,6 +6,8 @@
 #include "BlockRayCaster.hpp"
 #include "gui/RectangleRenderer.hpp"
 #include "InventoryHUD.hpp"
+#include "gui/BlockThumbnailRenderer.hpp"
+#include "BlockCache.hpp"
 
 namespace mpp
 {
@@ -27,9 +29,11 @@ namespace mpp
 		void SelectBlock ( Block * );
 
 		Camera camera;
-		std::list <Block> blocks;
-		BlockRenderer blockRenderer;
+		BlockCache blockCache;
 		BlockRayCaster blockRayCaster;
+		BlockRenderer blockRenderer;
+		std::list <Block> blocks;
+		BlockThumbnailRenderer blockThumbnailRenderer;
 		Block * selectedBlock { nullptr };
 		Directions selectedBlockFaceDirection;
 		RectangleRenderer rectangleRenderer;

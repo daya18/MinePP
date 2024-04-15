@@ -7,7 +7,6 @@
 
 #include "Window.hpp"
 #include "World.hpp"
-#include "BlockType.hpp"
 
 namespace mpp
 {
@@ -32,7 +31,6 @@ namespace mpp
 
 		Window window;
 		ImGuiContext * imguiContext;
-		BlockTypeRegistry blockTypeRegistry;
 		std::unique_ptr <World> world;
 	};
 }

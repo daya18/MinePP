@@ -78,7 +78,7 @@ namespace mpp
 			shader.SetUniform ( "u_color", rectangle->GetColor () );
 			shader.SetUniform ( "u_texture", 0 );
 			
-			GetTexture ( rectangle->GetTexture () ).Bind ( 0 );
+			( rectangle->GetTexture () ? rectangle->GetTexture () : & whiteTexture )->Bind ( 0 );
 
 			glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
 		}

@@ -1,10 +1,14 @@
 #include "BlockThumbnailRenderer.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+
+#include "../Transform.hpp"
+
 namespace mpp
 {
 	BlockThumbnailRenderer::BlockThumbnailRenderer ()
 	:
-		shader ( "shader/Shader.glsl" ),
+		shader ( "shader/ThumbnailShader.glsl" ),
 		vertexArray ( { { GL_FLOAT, 3 }, { GL_FLOAT, 2 } } )
 	{
 		glm::vec2 faceTextureSize { 1.0f / 3.0f, 1.0f / 2.0f };
@@ -60,40 +64,34 @@ namespace mpp
 		vertexArray.BindVertexBuffer ( vertexBuffer );
 	}
 
-	void BlockThumbnailRenderer::Render ()
+	void BlockThumbnailRenderer::Render ( Texture & in, Texture & out )
 	{
-	/*	glEnable ( GL_CULL_FACE );
+		framebuffer.BindTexture ( out );
 
-		if ( ! camera ) return;
+		framebuffer.Bind ();
+
+		glViewport ( 0, 0, out.GetSize ().x, out.GetSize ().y );
+
+		glClearColor ( 0.0f, 0.0f, 0.0f, 1.0f );
+		glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+		
+		glEnable ( GL_CULL_FACE );
 
 		shader.Bind ();
 		vertexArray.Bind ();
 		indexBuffer.Bind ( GL_ELEMENT_ARRAY_BUFFER );
 
-		shader.SetUniform ( "u_viewMatrix", camera->GetViewMatrix () );
-		shader.SetUniform ( "u_projectionMatrix", camera->GetProjectionMatrix () );
-
+		shader.SetUniform ( "u_viewMatrix", glm::lookAt ( glm::vec3 { 2.0f, 2.0f, 3.5f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f } ) );
+		shader.SetUniform ( "u_projectionMatrix", glm::perspective ( glm::radians ( 45.0f ), 1.0f, 0.1f, 100.0f ) );
+		
 		shader.SetUniform ( "u_sampler", 0 );
-		texture.Bind ( 0 );
+		in.Bind ( 0 );
 
+		glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
+		
+		glDisable ( GL_CULL_FACE );
 
-		for ( auto const & block : blocks )
-		{
-			auto transform { block->GetTransform () };
+		framebuffer.Unbind ();
 
-			shader.SetUniform ( "u_useMask", block->GetHighlighted () );
-
-			if ( block->GetHighlighted () )
-			{
-				shader.SetUniform ( "u_maskSampler", 1 );
-				outlineMask.Bind ( 1 );
-			}
-
-			shader.SetUniform ( "u_modelMatrix", transform.GetMatrix () );
-
-			glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
-		}
-
-		glDisable ( GL_CULL_FACE );*/
 	}
 }

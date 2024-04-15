@@ -2,16 +2,18 @@
 
 #include "gui/RectangleRenderer.hpp"
 #include "Window.hpp"
+#include "BlockCache.hpp"
 
 #include <iostream>
 
 namespace mpp
 {
-	InventoryHUD::InventoryHUD ( RectangleRenderer & rectangleRenderer )
-		: rectangleRenderer ( &rectangleRenderer )
+	InventoryHUD::InventoryHUD ( BlockCache & blockCache, RectangleRenderer & rectangleRenderer )
+	: 
+		blockCache ( & blockCache ),
+		rectangleRenderer ( &rectangleRenderer )
 	{
 		Initialize ();
-		SelectItemSlot ( 0 );
 	}
 	
 	void InventoryHUD::Initialize ()
@@ -45,7 +47,7 @@ namespace mpp
 			itemStacks.push_back ( {} );
 			itemStacks.back ().GetTransform ().SetScale ( { itemSlotSize - itemStackMargin * 2.0f, itemSlotSize - itemStackMargin * 2.0f, 1.0f } );
 			itemStacks.back ().GetTransform ().SetPosition ( slotPosition + itemStackMargin );
-			itemStacks.back ().SetColor ( { 1.0f, 0.0f, 0.0f, 1.0f } );
+			itemStacks.back ().SetColor ( { 1.0f, 1.0f, 1.0f, 1.0f } );
 
 			slotPosition.x += itemSlotSize + itemSlotMargin;
 		}
@@ -59,7 +61,7 @@ namespace mpp
 	
 	void InventoryHUD::SetItemSlotContents ( int slotIndex, std::string const & itemType, int itemCount )
 	{
-		//itemStacks[slotIndex].SetTexture ( )
+		itemStacks [ slotIndex ].SetTexture ( blockCache->GetBlockThumbnailTexture ( itemType ) );
 	}
 
 	void InventoryHUD::SelectItemSlot ( int targetIndex )

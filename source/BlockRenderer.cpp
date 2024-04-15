@@ -3,14 +3,15 @@
 #include "Camera.hpp"
 #include "Block.hpp"
 #include "Scene.hpp"
+#include "BlockCache.hpp"
 
 namespace mpp
 {
-	BlockRenderer::BlockRenderer ()
+	BlockRenderer::BlockRenderer ( BlockCache & blockCache )
 	:
 		shader ( "shader/Shader.glsl" ),
 		vertexArray ( { { GL_FLOAT, 3 }, { GL_FLOAT, 2 }, { GL_FLOAT, 2 } } ),
-		texture ( "image/block/Grass.png" ),
+		texture ( blockCache.GetBlockTexture ( "Grass" ) ),
 		outlineMask ( "image/block_mask/Outline.png" )
 	{
 		glm::vec2 faceTextureSize { 1.0f / 3.0f, 1.0f / 2.0f };
@@ -58,28 +59,6 @@ namespace mpp
 			16, 17, 18, 18, 19, 16,
 			20, 21, 22, 22, 23, 20
 		};
-
-
-		//Scene scene { "model/Block.obj" };
-
-		//int indexOffset { 0 };
-		//for ( auto const & mesh : scene.GetMeshes () )
-		//{
-		//	for ( auto const & vertex : mesh.GetVertices () )
-		//	{
-		//		vertices.push_back ( vertex.position.x );
-		//		vertices.push_back ( vertex.position.y );
-		//		vertices.push_back ( vertex.position.z );
-
-		//		vertices.push_back ( vertex.textureCoordinates.x );
-		//		vertices.push_back ( vertex.textureCoordinates.y );
-		//	}
-
-		//	for ( auto const & index : mesh.GetIndices () )
-		//		indices.push_back ( indexOffset + index );
-
-		//	indexOffset += mesh.GetVertices ().size ();
-		//}
 
 		vertexBuffer.SetData ( vertices, GL_STATIC_DRAW ),
 		indexBuffer.SetData ( indices, GL_STATIC_DRAW ),

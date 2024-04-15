@@ -11,13 +11,13 @@
 
 namespace mpp
 {
-	class BlockTypeRegistry;
+	class BlockCache;
 	class Block;
 
 	class BlockRenderer
 	{
 	public:
-		BlockRenderer ();
+		BlockRenderer ( BlockCache & );
 		~BlockRenderer ();
 
 		void SetCamera ( Camera const & );

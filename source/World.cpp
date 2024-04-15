@@ -9,11 +9,12 @@
 namespace mpp
 {
 	World::World ( Window & window )
-		:
+	:
 		camera ( window, { 0.0f, 0.0f, 5.0f } ),
-		blockRenderer ( ),
+		blockRenderer ( blockCache ),
+		blockCache ( blockThumbnailRenderer ),
 		rectangleRenderer ( window ),
-		inventoryHud ( rectangleRenderer )
+		inventoryHud ( blockCache, rectangleRenderer )
 	{
 		blockRenderer.SetCamera ( camera );
 
@@ -41,6 +42,9 @@ namespace mpp
 				}
 			}
 		} );
+
+		inventoryHud.SetItemSlotContents ( 0, "Grass", 1 );
+		inventoryHud.SelectItemSlot ( 0 );
 	}
 	
 	void World::CreateBlock ( std::string const & type, glm::vec3 const & position )

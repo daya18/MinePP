@@ -8,6 +8,7 @@
 #include "../opengl/VertexArray.hpp"
 #include "../opengl/Buffer.hpp"
 #include "../opengl/Texture.hpp"
+#include "../opengl/Framebuffer.hpp"
 
 namespace mpp
 {
@@ -16,7 +17,7 @@ namespace mpp
 	public:
 		BlockThumbnailRenderer ();
 
-		void Render ();
+		void Render ( Texture & in, Texture & out );
 
 	private:
 		Camera const * camera { nullptr };
@@ -25,5 +26,6 @@ namespace mpp
 		mpp::Buffer vertexBuffer;
 		mpp::Buffer indexBuffer;
 		mpp::VertexArray vertexArray;
+		mpp::Framebuffer framebuffer;
 	};
 }
