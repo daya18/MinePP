@@ -17,7 +17,7 @@ namespace mpp
 	class BlockRenderer
 	{
 	public:
-		BlockRenderer ( BlockTypeRegistry const & );
+		BlockRenderer ();
 		~BlockRenderer ();
 
 		void SetCamera ( Camera const & );

@@ -8,12 +8,12 @@
 
 namespace mpp
 {
-	World::World ( Window & window, BlockTypeRegistry const & blockRegistry )
+	World::World ( Window & window )
 		:
 		camera ( window, { 0.0f, 0.0f, 5.0f } ),
-		blockRenderer ( blockRegistry ),
+		blockRenderer ( ),
 		rectangleRenderer ( window ),
-		hud ( rectangleRenderer )
+		inventoryHud ( rectangleRenderer )
 	{
 		blockRenderer.SetCamera ( camera );
 

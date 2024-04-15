@@ -28,7 +28,7 @@ namespace mpp
 		ImGui_ImplOpenGL3_Init ();
 		window.InitImGuiForOpenGL ();
 
-		world = std::make_unique <World> ( window, blockTypeRegistry );
+		world = std::make_unique <World> ( window );
 	}
 	
 	Application::~Application ()

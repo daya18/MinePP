@@ -18,25 +18,33 @@ namespace mpp
 	class RectangleRenderer
 	{
 	public:
-		RectangleRenderer ( Window const & window );
+		RectangleRenderer ( Window & window );
 		~RectangleRenderer ();
 
 		void AddRectangle ( Rectangle const & );
 		void RemoveRectangle ( Rectangle const & );
 
 		void Render ();
+		Window & GetWindow ();
 
 	private:
 		void SetViewportSize ( glm::vec2 const & );
-		
-		Camera const * camera { nullptr };
+		Texture & GetTexture ( std::string const & );
+
+		Window * window;
 
 		mpp::Shader shader;
 		mpp::Buffer vertexBuffer;
 		mpp::Buffer indexBuffer;
 		mpp::VertexArray vertexArray;
+		Texture whiteTexture;
 		glm::mat4 projectionMatrix { glm::identity <glm::mat4> () };
-		std::vector <glm::mat4> instanceTransformMatrices;
 		std::vector <Rectangle const *> rectangles;
+		std::unordered_map <std::string, Texture> textures;
 	};
+
+
+
+	// Implementation
+	inline Window & RectangleRenderer::GetWindow () { return *window; }
 }

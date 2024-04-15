@@ -25,6 +25,7 @@ namespace mpp
 		void SetUniform ( std::string const &, int );
 		void SetUniform ( std::string const &, glm::mat4 const & );
 		void SetUniform ( std::string const &, std::vector <glm::mat4> const & );
+		void SetUniform ( std::string const &, glm::vec4 const & );
 
 	private:
 		GLint GetUniformLocation ( std::string const & );

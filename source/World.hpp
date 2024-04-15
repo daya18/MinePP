@@ -5,7 +5,7 @@
 #include "BlockRenderer.hpp"
 #include "BlockRayCaster.hpp"
 #include "gui/RectangleRenderer.hpp"
-#include "HUD.hpp"
+#include "InventoryHUD.hpp"
 
 namespace mpp
 {
@@ -14,7 +14,7 @@ namespace mpp
 	class World
 	{
 	public:
-		World ( Window &, BlockTypeRegistry const & );
+		World ( Window & );
 
 		void Update ();
 		void Render ();
@@ -33,6 +33,6 @@ namespace mpp
 		Block * selectedBlock { nullptr };
 		Directions selectedBlockFaceDirection;
 		RectangleRenderer rectangleRenderer;
-		HUD hud;
+		InventoryHUD inventoryHud;
 	};
 }

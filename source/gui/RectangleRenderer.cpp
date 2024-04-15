@@ -7,10 +7,12 @@
 
 namespace mpp
 {
-	RectangleRenderer::RectangleRenderer ( Window const & window )
+	RectangleRenderer::RectangleRenderer ( Window & window )
 	:
+		window ( & window ),
 		shader ( "shader/GUIShader.glsl" ),
-		vertexArray ( { { GL_FLOAT, 3 } } )
+		vertexArray ( { { GL_FLOAT, 3 }, { GL_FLOAT, 2 } } ),
+		whiteTexture ( "image/White.png" )
 	{
 		SetViewportSize ( window.GetSize () );
 
@@ -18,10 +20,10 @@ namespace mpp
 
 		std::vector <float> vertices
 		{
-			 1.0f,  1.0f,  0.0f,
-			-1.0f,  1.0f,  0.0f,
-			-1.0f, -1.0f,  0.0f,
-			 1.0f, -1.0f,  0.0f
+			 1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+			 0.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+			 0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+			 1.0f,  1.0f,  0.0f,  1.0f, 0.0f
 		};
 
 		std::vector <GLuint> indices
@@ -42,22 +44,21 @@ namespace mpp
 	
 	void RectangleRenderer::AddRectangle ( Rectangle const & rectangle )
 	{
-		instanceTransformMatrices.push_back ( rectangle.GetTransform ().GetMatrix () );
 		rectangles.push_back ( &rectangle );
 	}
 
 	void RectangleRenderer::RemoveRectangle ( Rectangle const & rectangle )
 	{
-		auto rectangleIt { std::find_if ( rectangles.begin (), rectangles.end (), 
-			[&rectangle] ( Rectangle const * a ) { return a == &rectangle; } ) };
-
-		instanceTransformMatrices.erase ( instanceTransformMatrices.begin () + std::distance ( rectangles.begin (), rectangleIt ) );
-		rectangles.erase ( rectangleIt );
+		std::erase ( rectangles, &rectangle );
 	}
 
 	void RectangleRenderer::SetViewportSize ( glm::vec2 const & size )
 	{
-		projectionMatrix = glm::ortho <float> ( -size.x * 0.5f, size.x * 0.5f, -size.y * 0.5f, size.y * 0.5f, -1000.0f, 1000.0f );
+		projectionMatrix = glm::ortho <float> ( 
+			 0.0f,    size.x, 
+			 size.y,  0.0f, 
+			-1000.0f, 1000.0f 
+		);
 	}
 
 	void RectangleRenderer::Render ()
@@ -70,8 +71,29 @@ namespace mpp
 		indexBuffer.Bind ( GL_ELEMENT_ARRAY_BUFFER );
 
 		shader.SetUniform ( "u_projectionMatrix", projectionMatrix );
-		shader.SetUniform ( "u_instanceTransformMatrices", instanceTransformMatrices );
+		
+		for ( auto rectangle : rectangles )
+		{
+			shader.SetUniform ( "u_modelMatrix", rectangle->GetTransform().GetMatrix () );
+			shader.SetUniform ( "u_color", rectangle->GetColor () );
+			shader.SetUniform ( "u_texture", 0 );
+			
+			GetTexture ( rectangle->GetTexture () ).Bind ( 0 );
 
-		glDrawElementsInstanced ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, instanceTransformMatrices.size () );
+			glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr );
+		}
+	}
+
+	Texture & RectangleRenderer::GetTexture ( std::string const & name )
+	{
+		if ( name.empty () )
+			return whiteTexture;
+
+		auto textureIt { textures.find ( name ) };
+		
+		if ( textureIt == textures.end () )
+			textureIt = textures.emplace ( name, Texture { name } ).first;
+
+		return textureIt->second;
 	}
 }

@@ -6,7 +6,7 @@
 
 namespace mpp
 {
-	BlockRenderer::BlockRenderer ( BlockTypeRegistry const & )
+	BlockRenderer::BlockRenderer ()
 	:
 		shader ( "shader/Shader.glsl" ),
 		vertexArray ( { { GL_FLOAT, 3 }, { GL_FLOAT, 2 }, { GL_FLOAT, 2 } } ),

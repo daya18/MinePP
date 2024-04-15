@@ -16,6 +16,7 @@ namespace mpp
 		void Scale ( glm::vec3 const & );
 		glm::mat4 const & GetMatrix () const;
 		glm::vec3 const & GetPosition () const;
+		glm::vec3 const & GetScale () const;
 
 	private:
 		void UpdateMatrix ();
@@ -31,4 +32,5 @@ namespace mpp
 	// Implementation
 	inline glm::mat4 const & Transform::GetMatrix () const { return matrix; }
 	inline glm::vec3 const & Transform::GetPosition () const { return position; }
+	inline glm::vec3 const & Transform::GetScale () const { return scale; }
 }
