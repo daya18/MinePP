@@ -1,6 +1,7 @@
 #include "Framebuffer.hpp"
 
 #include "Texture.hpp"
+#include <iostream>
 
 namespace mpp
 {
@@ -18,7 +19,6 @@ namespace mpp
 	Framebuffer::~Framebuffer ()
 	{
 	}
-
 	void Framebuffer::BindTexture ( Texture & texture )
 	{
 		Bind ();

@@ -3,17 +3,33 @@
 #include "gui/RectangleRenderer.hpp"
 #include "Window.hpp"
 #include "BlockCache.hpp"
+#include "Inventory.hpp"
 
 #include <iostream>
 
 namespace mpp
 {
-	InventoryHUD::InventoryHUD ( BlockCache & blockCache, RectangleRenderer & rectangleRenderer )
+	InventoryHUD::InventoryHUD (
+		BlockCache & blockCache,
+		RectangleRenderer & rectangleRenderer,
+		Window & window,
+		Inventory const & inventory )
 	: 
+		inventory ( & inventory ),
 		blockCache ( & blockCache ),
+		window ( & window ),
 		rectangleRenderer ( &rectangleRenderer )
 	{
 		Initialize ();
+
+		SelectItemSlot ( 0 );
+
+		window.AddScrollCallback ( [ this ] ( glm::vec2 offset ) {
+			if ( offset.y > 0.0f )
+				SelectItemSlot ( selectedSlot - 1 );
+			else if ( offset.y < 0.0f )
+				SelectItemSlot ( selectedSlot + 1 );
+		} );
 	}
 	
 	void InventoryHUD::Initialize ()
@@ -59,15 +75,28 @@ namespace mpp
 			rectangleRenderer->AddRectangle ( itemStack );
 	}
 	
-	void InventoryHUD::SetItemSlotContents ( int slotIndex, std::string const & itemType, int itemCount )
+	void InventoryHUD::Update ()
 	{
-		itemStacks [ slotIndex ].SetTexture ( blockCache->GetBlockThumbnailTexture ( itemType ) );
+		int index { 0 };
+		for ( auto & itemStack : itemStacks )
+		{
+			auto const & slot { inventory->GetSlot ( index ) };
+			
+			if ( slot.HasStack () )
+				itemStack.SetTexture ( &blockCache->GetBlockThumbnailTexture ( slot.GetStack().GetItemType () ) );
+			else
+				itemStack.SetTexture ( nullptr );
+
+			++index;
+		}
 	}
 
 	void InventoryHUD::SelectItemSlot ( int targetIndex )
 	{
 		if ( targetIndex < 0 || targetIndex > itemSlots.size () - 1 )
 			return;
+
+		selectedSlot = targetIndex;
 
 		for ( int index { 0 }; index < itemSlots.size (); ++index )
 		{

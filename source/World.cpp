@@ -14,7 +14,8 @@ namespace mpp
 		blockRenderer ( blockCache ),
 		blockCache ( blockThumbnailRenderer ),
 		rectangleRenderer ( window ),
-		inventoryHud ( blockCache, rectangleRenderer )
+		playerInventory ( 20 ),
+		inventoryHud ( blockCache, rectangleRenderer, window, playerInventory )
 	{
 		blockRenderer.SetCamera ( camera );
 
@@ -37,14 +38,22 @@ namespace mpp
 					{
 						auto position { selectedBlock->GetTransform ().GetPosition () };
 						position += directionVectors.at ( selectedBlockFaceDirection ) * 2.0f;
-						CreateBlock ( "Grass", position );
+						
+						int selectedSlotIndex { inventoryHud.GetSelectedItemSlot () };
+						auto const & selectedSlot { playerInventory.GetSlot ( selectedSlotIndex ) };
+						
+						if ( selectedSlot.HasStack () )
+							CreateBlock ( selectedSlot.GetStack().GetItemType (), position );
 					}
 				}
 			}
 		} );
 
-		inventoryHud.SetItemSlotContents ( 0, "Grass", 1 );
-		inventoryHud.SelectItemSlot ( 0 );
+		playerInventory.GetSlot ( 0 ).SetStack ( { "Grass", 1 } );
+		playerInventory.GetSlot ( 1 ).SetStack ( { "Stone", 1 } );
+		playerInventory.GetSlot ( 2 ).SetStack ( { "Log", 1 } );
+
+		inventoryHud.Update ();
 	}
 	
 	void World::CreateBlock ( std::string const & type, glm::vec3 const & position )

@@ -1,6 +1,7 @@
 #include "BlockCache.hpp"
 
 #include "gui/BlockThumbnailRenderer.hpp"
+#include <iostream>
 
 namespace mpp
 {

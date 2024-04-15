@@ -20,6 +20,7 @@ namespace mpp
 		glfwSetMouseButtonCallback ( window, GLFWButtonCallback );
 		glfwSetCursorPosCallback ( window, GLFWCursorPositionCallback );
 		glfwSetCursorEnterCallback ( window, GLFWCursorEnterCallback );
+		glfwSetScrollCallback ( window, GLFWScrollCallback );
 
 		if ( glfwRawMouseMotionSupported () )
 		{
@@ -101,10 +102,18 @@ namespace mpp
 		window.lastMousePosition = currentMousePosition;
 	}
 
-	void Window::GLFWCursorEnterCallback ( GLFWwindow * window, int entered )
+	void Window::GLFWCursorEnterCallback ( GLFWwindow * glfwWindow, int entered )
 	{
 		if ( entered )
-			GetWindow ( window )->ignoreNextMouseMotion = true;
+			GetWindow ( glfwWindow )->ignoreNextMouseMotion = true;
+	}
+	
+	void Window::GLFWScrollCallback ( GLFWwindow * glfwWindow, double xoffset, double yoffset )
+	{
+		for ( auto const & scrollCallback : GetWindow ( glfwWindow )->scrollCallbacks )
+		{
+			scrollCallback ( { xoffset, yoffset } );
+		}
 	}
 
 	Window * Window::GetWindow ( GLFWwindow * window )

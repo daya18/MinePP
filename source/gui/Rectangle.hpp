@@ -16,7 +16,7 @@ namespace mpp
 		Transform & GetTransform ();
 
 		void SetColor ( glm::vec4 const & );
-		void SetTexture ( Texture const & );
+		void SetTexture ( Texture const * );
 
 		glm::vec4 const & GetColor () const;
 		Texture const * GetTexture () const;
@@ -33,7 +33,7 @@ namespace mpp
 	inline Transform const & Rectangle::GetTransform () const { return transform; }
 	inline Transform & Rectangle::GetTransform () { return transform; }
 	inline void Rectangle::SetColor ( glm::vec4 const & color ) { this->color = color; }
-	inline void Rectangle::SetTexture ( Texture const & texture ) { this->texture = & texture; }
+	inline void Rectangle::SetTexture ( Texture const * texture ) { this->texture = texture; }
 	inline glm::vec4 const & Rectangle::GetColor () const { return color; }
 	inline Texture const * Rectangle::GetTexture () const { return texture; }
 }

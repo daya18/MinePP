@@ -72,7 +72,7 @@ namespace mpp
 
 		glViewport ( 0, 0, out.GetSize ().x, out.GetSize ().y );
 
-		glClearColor ( 0.0f, 0.0f, 0.0f, 1.0f );
+		glClearColor ( 1.0f, 1.0f, 1.0f, 1.0f );
 		glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		
 		glEnable ( GL_CULL_FACE );

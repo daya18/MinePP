@@ -9,6 +9,7 @@ namespace mpp
 {
 	BlockRenderer::BlockRenderer ( BlockCache & blockCache )
 	:
+		blockCache ( &blockCache ),
 		shader ( "shader/Shader.glsl" ),
 		vertexArray ( { { GL_FLOAT, 3 }, { GL_FLOAT, 2 }, { GL_FLOAT, 2 } } ),
 		texture ( blockCache.GetBlockTexture ( "Grass" ) ),
@@ -100,12 +101,14 @@ namespace mpp
 		shader.SetUniform ( "u_projectionMatrix", camera->GetProjectionMatrix () );
 
 		shader.SetUniform ( "u_sampler", 0 );
-		texture.Bind ( 0 );
 
 
 		for ( auto const & block : blocks )
 		{
 			auto transform { block->GetTransform () };
+			shader.SetUniform ( "u_modelMatrix", transform.GetMatrix () );
+			
+			blockCache->GetBlockTexture ( block->GetType () ).Bind ( 0 );
 			
 			shader.SetUniform ( "u_useMask", block->GetHighlighted () );
 			
@@ -115,7 +118,6 @@ namespace mpp
 				outlineMask.Bind ( 1 );
 			}
 
-			shader.SetUniform ( "u_modelMatrix", transform.GetMatrix () );
 
 			glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
 		}

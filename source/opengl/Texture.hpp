@@ -23,7 +23,7 @@ namespace mpp
 	private:
 		void SetDefaultParameters ();
 
-		glm::vec2 size;
+		glm::vec2 size { 0.0f, 0.0f };
 		GLuint texture;
 
 		friend class Framebuffer;

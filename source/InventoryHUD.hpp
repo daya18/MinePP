@@ -8,14 +8,17 @@ namespace mpp
 {
 	class BlockCache;
 	class RectangleRenderer;
+	class Window;
+	class Inventory;
 
 	class InventoryHUD
 	{
 	public:
-		InventoryHUD ( BlockCache &, RectangleRenderer & );
+		InventoryHUD ( BlockCache &, RectangleRenderer &, Window &, Inventory const & );
 
-		void SetItemSlotContents ( int slotIndex, std::string const & itemType, int itemCount );
+		void Update ();
 		void SelectItemSlot ( int index );
+		int GetSelectedItemSlot () const;
 
 	private:
 		float itemSlotSize { 70.0f };
@@ -30,8 +33,17 @@ namespace mpp
 
 		BlockCache * blockCache;
 		RectangleRenderer * rectangleRenderer;
+		Window * window;
+		Inventory const * inventory;
+
 		Rectangle background;
 		std::vector <Rectangle> itemSlots;
 		std::vector <Rectangle> itemStacks;
+		int selectedSlot { 0 };
 	};
+
+
+
+	// Implementation
+	inline int InventoryHUD::GetSelectedItemSlot () const { return selectedSlot; }
 }

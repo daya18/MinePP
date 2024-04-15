@@ -8,6 +8,7 @@
 #include "InventoryHUD.hpp"
 #include "gui/BlockThumbnailRenderer.hpp"
 #include "BlockCache.hpp"
+#include "Inventory.hpp"
 
 namespace mpp
 {
@@ -37,6 +38,7 @@ namespace mpp
 		Block * selectedBlock { nullptr };
 		Directions selectedBlockFaceDirection;
 		RectangleRenderer rectangleRenderer;
+		Inventory playerInventory;
 		InventoryHUD inventoryHud;
 	};
 }

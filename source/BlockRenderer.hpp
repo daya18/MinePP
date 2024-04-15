@@ -27,6 +27,8 @@ namespace mpp
 		void Render ();
 
 	private:
+		BlockCache * blockCache;
+
 		Camera const * camera { nullptr };
 
 		mpp::Shader shader;
