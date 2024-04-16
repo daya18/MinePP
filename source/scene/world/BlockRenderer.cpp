@@ -2,7 +2,6 @@
 
 #include "Camera.hpp"
 #include "Block.hpp"
-#include "Scene.hpp"
 #include "BlockCache.hpp"
 
 namespace mpp

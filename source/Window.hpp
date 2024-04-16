@@ -23,6 +23,7 @@ namespace mpp
 		void InitImGuiForOpenGL ();
 		void SwapBuffers ();
 		bool GetkeyState ( int key );
+		void SetRawInput ( bool );
 
 		float GetAspectRatio () const;
 

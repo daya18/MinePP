@@ -1,6 +1,5 @@
 #include "RectangleRenderer.hpp"
 
-#include "../Camera.hpp"
 #include "../Window.hpp"
 
 #include "Rectangle.hpp"

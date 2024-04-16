@@ -6,7 +6,7 @@
 #include <imgui.h>
 
 #include "Window.hpp"
-#include "World.hpp"
+#include "scene/Scene.hpp"
 
 namespace mpp
 {
@@ -17,6 +17,10 @@ namespace mpp
 		~Application ();
 
 		void Run ();
+
+		Window & GetWindow ();
+		void Quit ();
+		void SetScene ( std::unique_ptr <Scene> );
 
 	private:
 		static void GLAPIENTRY debugCallback (
@@ -31,6 +35,13 @@ namespace mpp
 
 		Window window;
 		ImGuiContext * imguiContext;
-		std::unique_ptr <World> world;
+		std::unique_ptr <Scene> scene;
+		bool quit { false };
 	};
+
+
+
+	// Implementation
+	inline Window & Application::GetWindow () { return window; }
+	inline void Application::Quit () { quit = true; }
 }

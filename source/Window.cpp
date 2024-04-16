@@ -21,12 +21,6 @@ namespace mpp
 		glfwSetCursorPosCallback ( window, GLFWCursorPositionCallback );
 		glfwSetCursorEnterCallback ( window, GLFWCursorEnterCallback );
 		glfwSetScrollCallback ( window, GLFWScrollCallback );
-
-		if ( glfwRawMouseMotionSupported () )
-		{
-			glfwSetInputMode ( window, GLFW_CURSOR, GLFW_CURSOR_DISABLED );
-			glfwSetInputMode ( window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE );
-		}
 	}
 	
 	void Window::MakeContextCurrent ()
@@ -49,6 +43,15 @@ namespace mpp
 		return glfwGetKey ( window, key );
 	}
 	
+	void Window::SetRawInput ( bool enabled )
+	{
+		if ( ! glfwRawMouseMotionSupported () )
+			return;
+		
+		glfwSetInputMode ( window, GLFW_CURSOR, enabled ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL );
+		glfwSetInputMode ( window, GLFW_RAW_MOUSE_MOTION, enabled ? GLFW_TRUE : GLFW_FALSE );
+	}
+
 	float Window::GetAspectRatio () const
 	{
 		int width, height;

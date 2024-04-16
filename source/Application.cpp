@@ -9,6 +9,9 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include "scene/world/World.hpp"
+#include "scene/MainMenu.hpp"
+
 namespace mpp
 {
 	Application::Application ()
@@ -28,7 +31,7 @@ namespace mpp
 		ImGui_ImplOpenGL3_Init ();
 		window.InitImGuiForOpenGL ();
 
-		world = std::make_unique <World> ( window );
+		scene = std::make_unique <World> ( *this );
 	}
 	
 	Application::~Application ()
@@ -42,26 +45,26 @@ namespace mpp
 
 	void Application::Run ()
 	{
-		while ( ! window.ShouldClose () )
+		while ( ! window.ShouldClose () && ! quit )
 		{
 			glfwPollEvents ();
 
-			world->Update ();
+			scene->Update ( 0.0f );
 
 			auto windowSize { window.GetSize () };
 			glViewport ( 0, 0, windowSize.x, windowSize.y );
 
-			glClearColor ( 0.529f, 0.808f, 0.922f, 1.0f );
+			//glClearColor ( 0.529f, 0.808f, 0.922f, 1.0f );
+			glClearColor ( 0.0f, 0.0f, 0.0f, 1.0f );
 			glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-			world->Render ();
+			
+			scene->Render ();
 
 			ImGui_ImplGlfw_NewFrame ();
 			ImGui_ImplOpenGL3_NewFrame ();
 
 			ImGui::NewFrame ();
-			ImGui::ShowMetricsWindow ();
-			world->RenderGUI ();
+			scene->RenderGUI ();
 			ImGui::EndFrame ();
 
 			ImGui::Render ();
@@ -76,5 +79,10 @@ namespace mpp
 		ImGui::DestroyContext ( imguiContext );
 
 		glfwTerminate ();
+	}
+
+	void Application::SetScene ( std::unique_ptr <Scene> scene )
+	{
+		this->scene = std::move ( scene );
 	}
 }

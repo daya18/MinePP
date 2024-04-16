@@ -3,7 +3,7 @@
 #include <string>
 #include <glm/glm.hpp>
 
-#include "../Transform.hpp"
+#include "../scene/Transform.hpp"
 
 namespace mpp
 {

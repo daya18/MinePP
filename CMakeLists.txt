@@ -44,22 +44,22 @@ add_executable ( MinePP )
 target_sources ( MinePP PRIVATE 
 	source/Application.cpp 
 	source/opengl/Shader.cpp 
-	source/World.cpp
+	"source/scene/world/World.cpp"
 	source/opengl/VertexArray.cpp 
 	source/opengl/Type.cpp
 	source/opengl/Buffer.cpp 
-	source/Camera.cpp 
+	"source/scene/world/Camera.cpp" 
 	source/main.cpp
 	source/Window.cpp
-	"source/BlockRenderer.cpp" 
+	"source/scene/world/BlockRenderer.cpp" 
 	"source/opengl/Texture.cpp" 
-	"source/Block.cpp" 
-	"source/BlockRayCaster.cpp"
-	"source/Transform.cpp" 
-	"source/Scene.cpp" 
-	"source/InventoryHUD.cpp" 
+	"source/scene/world/Block.cpp" 
+	"source/scene/world/BlockRayCaster.cpp"
+	"source/scene/Transform.cpp" 
+	 
+	"source/scene/world/InventoryHUD.cpp" 
 	"source/gui/Rectangle.cpp" 
 	"source/gui/RectangleRenderer.cpp" 
 	"source/gui/BlockThumbnailRenderer.cpp" 
-	"source/BlockCache.cpp"
- "source/opengl/Framebuffer.cpp")
+	"source/scene/world/BlockCache.cpp"
+ "source/opengl/Framebuffer.cpp" "source/scene/Scene.cpp" "source/scene/MainMenu.cpp")

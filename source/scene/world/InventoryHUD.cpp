@@ -1,7 +1,7 @@
 #include "InventoryHUD.hpp"
 
-#include "gui/RectangleRenderer.hpp"
-#include "Window.hpp"
+#include "../../gui/RectangleRenderer.hpp"
+#include "../../Window.hpp"
 #include "BlockCache.hpp"
 #include "Inventory.hpp"
 

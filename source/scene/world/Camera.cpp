@@ -2,7 +2,8 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
-#include "Window.hpp"
+#include "World.hpp"
+#include "../../Window.hpp"
 
 #include <iostream>
 
@@ -15,9 +16,10 @@ namespace mpp
 	float const Camera::rotateSensitivity { 0.2f };
 	float const Camera::moveSensitivity { 0.02f };
 
-	Camera::Camera ( Window & window, glm::vec3 const & position )
+	Camera::Camera ( Window & window, World & world, glm::vec3 const & position )
 	:
 		window ( & window ),
+		world ( & world ),
 		position ( position ),
 		lookDirection { 0.0f, 0.0f, -1.0f },
 		aspect { window.GetAspectRatio () }
@@ -62,6 +64,9 @@ namespace mpp
 
 	void Camera::OnMouseMove ( glm::vec2 const & delta )
 	{
+		if ( world->CheckPaused () )
+			return;
+
 		Rotate ( { delta.y, delta.x, 0.0f } );
 	}
 

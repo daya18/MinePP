@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "gui/Rectangle.hpp"
+#include "../../gui/Rectangle.hpp"
 
 namespace mpp
 {

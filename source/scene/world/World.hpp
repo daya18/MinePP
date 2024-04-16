@@ -4,31 +4,36 @@
 #include "Block.hpp"
 #include "BlockRenderer.hpp"
 #include "BlockRayCaster.hpp"
-#include "gui/RectangleRenderer.hpp"
+#include "../../gui/RectangleRenderer.hpp"
 #include "InventoryHUD.hpp"
-#include "gui/BlockThumbnailRenderer.hpp"
+#include "../../gui/BlockThumbnailRenderer.hpp"
 #include "BlockCache.hpp"
 #include "Inventory.hpp"
+#include "../Scene.hpp"
 
 namespace mpp
 {
-	class Window;
+	class Application;
 
-	class World
+	class World : public Scene
 	{
 	public:
-		World ( Window & );
+		World ( Application & );
 
-		void Update ();
-		void Render ();
-		void RenderGUI ();
-
-		void CreateBlock ( std::string const &, glm::vec3 const & );
-		void DestroyBlock ( Block * );
+		void Render () override;
+		void RenderGUI () override;
+		void Update ( float delta ) override;
+		bool CheckPaused () const;
 
 	private:
+		void CreateBlock ( std::string const &, glm::vec3 const & );
+		void DestroyBlock ( Block * );
 		void SelectBlock ( Block * );
+		void SetPaused ( bool );
+		void OnKeyPress ( int key, int action );
 
+		Application * application;
+		Window * window;
 		Camera camera;
 		BlockCache blockCache;
 		BlockRayCaster blockRayCaster;
@@ -40,5 +45,11 @@ namespace mpp
 		RectangleRenderer rectangleRenderer;
 		Inventory playerInventory;
 		InventoryHUD inventoryHud;
+		bool paused { false };
 	};
+
+
+
+	// Implementation
+	inline bool World::CheckPaused () const { return paused; }
 }

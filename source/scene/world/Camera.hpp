@@ -5,11 +5,12 @@
 namespace mpp
 {
 	class Window;
+	class World;
 
 	class Camera
 	{
 	public:
-		Camera ( Window &, glm::vec3 const & position );
+		Camera ( Window &, World &, glm::vec3 const & position );
 		~Camera ();
 
 		void Update ();
@@ -33,6 +34,7 @@ namespace mpp
 		static float const moveSensitivity;
 
 		Window * window;
+		World * world;
 
 		glm::vec3 position;
 		glm::vec3 lookDirection;

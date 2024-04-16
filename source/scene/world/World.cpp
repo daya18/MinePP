@@ -4,47 +4,64 @@
 
 #include "imgui.h"
 
-#include "Window.hpp"
+#include "../../Application.hpp"
+#include "../../Window.hpp"
 
 namespace mpp
 {
-	World::World ( Window & window )
+	World::World ( Application & application )
 	:
-		camera ( window, { 0.0f, 0.0f, 5.0f } ),
+		application ( &application ),
+		window ( & application.GetWindow () ),
+		camera ( *window, *this, { 0.0f, 0.0f, 5.0f } ),
 		blockRenderer ( blockCache ),
 		blockCache ( blockThumbnailRenderer ),
-		rectangleRenderer ( window ),
+		rectangleRenderer ( *window ),
 		playerInventory ( 20 ),
-		inventoryHud ( blockCache, rectangleRenderer, window, playerInventory )
+		inventoryHud ( blockCache, rectangleRenderer, *window, playerInventory )
 	{
 		blockRenderer.SetCamera ( camera );
 
 		CreateBlock ( "Grass", { 0, 0, 0 } );
 		CreateBlock ( "Grass", { 2, 0, 0 } );
 
-		window.AddButtonCallback ( [ this ] ( int button, int action ) 
+		window->AddButtonCallback ( [ this ] ( int button, int action ) 
 		{ 
 			if ( action == GLFW_PRESS )
 			{
-				if ( button == GLFW_MOUSE_BUTTON_LEFT )
+				if ( ! paused )
 				{
-					DestroyBlock ( selectedBlock );
-					selectedBlock = nullptr;
-				}
-
-				if ( button == GLFW_MOUSE_BUTTON_RIGHT )
-				{
-					if ( selectedBlock )
+					if ( button == GLFW_MOUSE_BUTTON_LEFT )
 					{
-						auto position { selectedBlock->GetTransform ().GetPosition () };
-						position += directionVectors.at ( selectedBlockFaceDirection ) * 2.0f;
-						
-						int selectedSlotIndex { inventoryHud.GetSelectedItemSlot () };
-						auto const & selectedSlot { playerInventory.GetSlot ( selectedSlotIndex ) };
-						
-						if ( selectedSlot.HasStack () )
-							CreateBlock ( selectedSlot.GetStack().GetItemType (), position );
+						DestroyBlock ( selectedBlock );
+						selectedBlock = nullptr;
 					}
+
+					if ( button == GLFW_MOUSE_BUTTON_RIGHT )
+					{
+						if ( selectedBlock )
+						{
+							auto position { selectedBlock->GetTransform ().GetPosition () };
+							position += directionVectors.at ( selectedBlockFaceDirection ) * 2.0f;
+
+							int selectedSlotIndex { inventoryHud.GetSelectedItemSlot () };
+							auto const & selectedSlot { playerInventory.GetSlot ( selectedSlotIndex ) };
+
+							if ( selectedSlot.HasStack () )
+								CreateBlock ( selectedSlot.GetStack ().GetItemType (), position );
+						}
+					}
+				}
+			}
+		} );
+
+		window->AddKeyCallback ( [ this ] ( int key, int action ) 
+		{
+			if ( action == GLFW_PRESS )
+			{
+				if ( key == GLFW_KEY_ESCAPE )
+				{
+					SetPaused ( ! paused );
 				}
 			}
 		} );
@@ -54,6 +71,8 @@ namespace mpp
 		playerInventory.GetSlot ( 2 ).SetStack ( { "Log", 1 } );
 
 		inventoryHud.Update ();
+
+		SetPaused ( false );
 	}
 	
 	void World::CreateBlock ( std::string const & type, glm::vec3 const & position )
@@ -78,8 +97,11 @@ namespace mpp
 		}
 	}
 
-	void World::Update ()
+	void World::Update ( float delta )
 	{
+		if ( paused )
+			return;
+
 		camera.Update ();
 
 		auto intersection { blockRayCaster.CheckRayIntersection ( 
@@ -116,6 +138,22 @@ namespace mpp
 		drawList->AddLine ( { center.x, center.y - crosshairSize.y * 0.5f }, { center.x, center.y + crosshairSize.y * 0.5f }, IM_COL32_WHITE, 3.0f );
 		ImGui::End ();
 		ImGui::PopStyleVar ();
+
+		if ( paused )
+		{
+			auto displaySize { ImGui::GetIO ().DisplaySize };
+			ImVec2 size { displaySize.x * 0.2f, displaySize.y * 0.5f };
+
+			ImGui::SetNextWindowSize ( size );
+			ImGui::SetNextWindowPos ( { ( displaySize.x - size.x ) * 0.5f, ( displaySize.y - size.y ) * 0.5f } );
+
+			ImGui::Begin ( "Pause Menu" );
+			
+			if ( ImGui::Button ( "Quit" ) )
+				application->Quit ();
+			
+			ImGui::End ();
+		}
 	}
 
 	void World::SelectBlock ( Block * block )
@@ -135,4 +173,9 @@ namespace mpp
 			selectedBlock->SetHighlighted ( true );
 	}
 
+	void World::SetPaused ( bool paused )
+	{
+		this->paused = paused;
+		window->SetRawInput ( ! paused );
+	}
 }
