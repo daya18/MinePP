@@ -25,46 +25,8 @@ namespace mpp
 		CreateBlock ( "Grass", { 0, 0, 0 } );
 		CreateBlock ( "Grass", { 2, 0, 0 } );
 
-		window->AddButtonCallback ( [ this ] ( int button, int action ) 
-		{ 
-			if ( action == GLFW_PRESS )
-			{
-				if ( ! paused )
-				{
-					if ( button == GLFW_MOUSE_BUTTON_LEFT )
-					{
-						DestroyBlock ( selectedBlock );
-						selectedBlock = nullptr;
-					}
-
-					if ( button == GLFW_MOUSE_BUTTON_RIGHT )
-					{
-						if ( selectedBlock )
-						{
-							auto position { selectedBlock->GetTransform ().GetPosition () };
-							position += directionVectors.at ( selectedBlockFaceDirection ) * 2.0f;
-
-							int selectedSlotIndex { inventoryHud.GetSelectedItemSlot () };
-							auto const & selectedSlot { playerInventory.GetSlot ( selectedSlotIndex ) };
-
-							if ( selectedSlot.HasStack () )
-								CreateBlock ( selectedSlot.GetStack ().GetItemType (), position );
-						}
-					}
-				}
-			}
-		} );
-
-		window->AddKeyCallback ( [ this ] ( int key, int action ) 
-		{
-			if ( action == GLFW_PRESS )
-			{
-				if ( key == GLFW_KEY_ESCAPE )
-				{
-					SetPaused ( ! paused );
-				}
-			}
-		} );
+		window->AddButtonCallback ( [this] ( int button, int action ) { OnButtonAction ( button, action ); } );
+		window->AddKeyCallback ( [ this ] ( int key, int action ) { OnKeyAction ( key, action ); } );
 
 		playerInventory.GetSlot ( 0 ).SetStack ( { "Grass", 1 } );
 		playerInventory.GetSlot ( 1 ).SetStack ( { "Stone", 1 } );
@@ -102,7 +64,7 @@ namespace mpp
 		if ( paused )
 			return;
 
-		camera.Update ();
+		camera.Update ( delta );
 
 		auto intersection { blockRayCaster.CheckRayIntersection ( 
 			{ camera.GetPosition (), glm::normalize ( camera.GetLookDirection () ) } ) };
@@ -124,20 +86,14 @@ namespace mpp
 
 	void World::RenderGUI ()
 	{
-		float aspectRatio { ImGui::GetIO ().DisplaySize.x / ImGui::GetIO ().DisplaySize.y };
-		ImVec2 center { ImGui::GetIO ().DisplaySize.x * 0.5f, ImGui::GetIO ().DisplaySize.y * 0.5f };
-		
-		ImVec2 crosshairSize { 30.0f, 30.0f };
+		RenderCrosshair ();
 
-		ImGui::PushStyleVar ( ImGuiStyleVar_WindowPadding, { 0, 0 } );
-		ImGui::SetNextWindowSize ( { crosshairSize.x, crosshairSize.y } );
-		ImGui::SetNextWindowPos ( { center.x - crosshairSize.x * 0.5f, center.y - crosshairSize.y * 0.5f } );
-		ImGui::Begin ( "Crosshair", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground );
-		auto drawList { ImGui::GetWindowDrawList () };
-		drawList->AddLine ( { center.x - crosshairSize.x * 0.5f, center.y }, { center.x + crosshairSize.x * 0.5f, center.y }, IM_COL32_WHITE, 3.0f );
-		drawList->AddLine ( { center.x, center.y - crosshairSize.y * 0.5f }, { center.x, center.y + crosshairSize.y * 0.5f }, IM_COL32_WHITE, 3.0f );
-		ImGui::End ();
-		ImGui::PopStyleVar ();
+		if ( ImGui::Begin ( "Statistics" ) )
+		{
+			ImGui::Text ( "FPS: %f", ImGui::GetIO ().Framerate );
+			ImGui::Text ( "Frame Time: %f", ImGui::GetIO ().DeltaTime * 1000.0f );
+			ImGui::End ();
+		}
 
 		if ( paused )
 		{
@@ -178,4 +134,64 @@ namespace mpp
 		this->paused = paused;
 		window->SetRawInput ( ! paused );
 	}
+
+	void World::OnKeyAction ( int key, int action )
+	{
+		if ( action == GLFW_PRESS )
+		{
+			if ( key == GLFW_KEY_ESCAPE )
+			{
+				SetPaused ( ! paused );
+			}
+		}
+	}
+
+	void World::OnButtonAction ( int button, int action )
+	{
+		if ( action == GLFW_PRESS )
+		{
+			if ( ! paused )
+			{
+				if ( button == GLFW_MOUSE_BUTTON_LEFT )
+				{
+					DestroyBlock ( selectedBlock );
+					selectedBlock = nullptr;
+				}
+
+				if ( button == GLFW_MOUSE_BUTTON_RIGHT )
+				{
+					if ( selectedBlock )
+					{
+						auto position { selectedBlock->GetTransform ().GetPosition () };
+						position += directionVectors.at ( selectedBlockFaceDirection ) * 2.0f;
+
+						int selectedSlotIndex { inventoryHud.GetSelectedItemSlot () };
+						auto const & selectedSlot { playerInventory.GetSlot ( selectedSlotIndex ) };
+
+						if ( selectedSlot.HasStack () )
+							CreateBlock ( selectedSlot.GetStack ().GetItemType (), position );
+					}
+				}
+			}
+		}
+	}
+
+	void World::RenderCrosshair ()
+	{
+		float aspectRatio { ImGui::GetIO ().DisplaySize.x / ImGui::GetIO ().DisplaySize.y };
+		ImVec2 center { ImGui::GetIO ().DisplaySize.x * 0.5f, ImGui::GetIO ().DisplaySize.y * 0.5f };
+
+		ImVec2 crosshairSize { 30.0f, 30.0f };
+
+		ImGui::PushStyleVar ( ImGuiStyleVar_WindowPadding, { 0, 0 } );
+		ImGui::SetNextWindowSize ( { crosshairSize.x, crosshairSize.y } );
+		ImGui::SetNextWindowPos ( { center.x - crosshairSize.x * 0.5f, center.y - crosshairSize.y * 0.5f } );
+		ImGui::Begin ( "Crosshair", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground );
+		auto drawList { ImGui::GetWindowDrawList () };
+		drawList->AddLine ( { center.x - crosshairSize.x * 0.5f, center.y }, { center.x + crosshairSize.x * 0.5f, center.y }, IM_COL32_WHITE, 3.0f );
+		drawList->AddLine ( { center.x, center.y - crosshairSize.y * 0.5f }, { center.x, center.y + crosshairSize.y * 0.5f }, IM_COL32_WHITE, 3.0f );
+		ImGui::End ();
+		ImGui::PopStyleVar ();
+	}
+
 }

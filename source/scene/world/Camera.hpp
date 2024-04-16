@@ -13,7 +13,7 @@ namespace mpp
 		Camera ( Window &, World &, glm::vec3 const & position );
 		~Camera ();
 
-		void Update ();
+		void Update ( float delta );
 
 		void SetPosition ( glm::vec3 const & position );
 		void Rotate ( glm::vec3 );

@@ -13,8 +13,8 @@
 
 namespace mpp
 {
-	float const Camera::rotateSensitivity { 0.2f };
-	float const Camera::moveSensitivity { 0.02f };
+	float const Camera::rotateSensitivity { 36.0f };
+	float const Camera::moveSensitivity { 6.0f };
 
 	Camera::Camera ( Window & window, World & world, glm::vec3 const & position )
 	:
@@ -26,48 +26,40 @@ namespace mpp
 	{
 		UpdateViewMatrix ();
 		UpdateProjectionMatrix ();
-
-		// Bind window event handlers
-		window.AddMouseMotionCallback ( [this] ( glm::vec2 const & delta ) { OnMouseMove ( delta ); } );
 	}
 
 	Camera::~Camera ()
 	{
 	}
 	
-	void Camera::Update ()
+	void Camera::Update ( float delta )
 	{
 		glm::vec3 up { 0.0f, 1.0f, 0.0f };
 		glm::vec3 moveRightDir { glm::cross ( lookDirection, up ) };
 		glm::vec3 moveForwardDir { glm::cross ( moveRightDir, up ) };
 
 		if ( window->GetkeyState ( GLFW_KEY_W ) )
-			this->position -= moveForwardDir * moveSensitivity;
+			this->position -= moveForwardDir * moveSensitivity * delta;
 		
 		if ( window->GetkeyState ( GLFW_KEY_S ) )
-			this->position += moveForwardDir * moveSensitivity;
+			this->position += moveForwardDir * moveSensitivity * delta;
 
 		if ( window->GetkeyState ( GLFW_KEY_D ) )
-			this->position += moveRightDir * moveSensitivity;
+			this->position += moveRightDir * moveSensitivity * delta;
 
 		if ( window->GetkeyState ( GLFW_KEY_A ) )
-			this->position -= moveRightDir * moveSensitivity;
+			this->position -= moveRightDir * moveSensitivity * delta;
 
 		if ( window->GetkeyState ( GLFW_KEY_LEFT_SHIFT ) )
-			this->position -= up * moveSensitivity;
+			this->position -= up * moveSensitivity * delta;
 
 		if ( window->GetkeyState ( GLFW_KEY_SPACE ) )
-			this->position += up * moveSensitivity;
+			this->position += up * moveSensitivity * delta;
+
+		auto rotationDelta { glm::vec3 { window->GetCursorDelta ().y, window->GetCursorDelta ().x, 0.0f } };
+		Rotate ( rotationDelta * rotateSensitivity * delta );
 
 		UpdateViewMatrix ();
-	}
-
-	void Camera::OnMouseMove ( glm::vec2 const & delta )
-	{
-		if ( world->CheckPaused () )
-			return;
-
-		Rotate ( { delta.y, delta.x, 0.0f } );
 	}
 
 	void Camera::SetPosition ( glm::vec3 const & position )
@@ -82,8 +74,8 @@ namespace mpp
 		glm::vec3 localRight { glm::cross ( up, lookDirection ) };
 		glm::vec3 localUp { glm::cross ( localRight, lookDirection ) };
 
-		lookDirection = glm::rotate ( lookDirection, glm::radians ( delta.x * rotateSensitivity ) , localRight );
-		lookDirection = glm::rotate ( lookDirection, glm::radians ( delta.y * rotateSensitivity ) , localUp );
+		lookDirection = glm::rotate ( lookDirection, glm::radians ( delta.x ) , localRight );
+		lookDirection = glm::rotate ( lookDirection, glm::radians ( delta.y ) , localUp );
 	}
 
 	void Camera::UpdateViewMatrix ()

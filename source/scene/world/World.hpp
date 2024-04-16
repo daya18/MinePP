@@ -30,7 +30,9 @@ namespace mpp
 		void DestroyBlock ( Block * );
 		void SelectBlock ( Block * );
 		void SetPaused ( bool );
-		void OnKeyPress ( int key, int action );
+		void OnKeyAction ( int key, int action );
+		void OnButtonAction ( int button, int action );
+		void RenderCrosshair ();
 
 		Application * application;
 		Window * window;

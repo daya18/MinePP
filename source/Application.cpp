@@ -49,7 +49,7 @@ namespace mpp
 		{
 			glfwPollEvents ();
 
-			scene->Update ( 0.0f );
+			scene->Update ( ImGui::GetIO().DeltaTime );
 
 			auto windowSize { window.GetSize () };
 			glViewport ( 0, 0, windowSize.x, windowSize.y );

@@ -36,6 +36,7 @@ namespace mpp
 	void Window::SwapBuffers ()
 	{
 		glfwSwapBuffers ( window );
+		cursorDelta = { 0.0f, 0.0f };
 	}
 	
 	bool Window::GetkeyState ( int key )
@@ -95,9 +96,10 @@ namespace mpp
 		
 		if ( ! window.ignoreNextMouseMotion )
 		{
-			for ( auto const & mouseMotionCallback : window.mouseMotionCallbacks )
-				mouseMotionCallback ( currentMousePosition - window.lastMousePosition );
+			window.cursorDelta = currentMousePosition - window.lastMousePosition;
 			
+			for ( auto const & mouseMotionCallback : window.mouseMotionCallbacks )
+				mouseMotionCallback ( window.cursorDelta );
 		}
 		else
 			window.ignoreNextMouseMotion = false;

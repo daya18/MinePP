@@ -27,7 +27,7 @@ namespace mpp
 		float inventoryHUDBottomMargin { 10.0f };
 		float itemStackMargin { 5.0f };
 		glm::vec4 itemSlotInactiveColor { 1.0f, 1.0f, 1.0f, 1.0f };
-		glm::vec4 itemSlotActiveColor { 1.0f, 1.0f, 0.0f, 1.0f };
+		glm::vec4 itemSlotActiveColor { 0.0f, 1.0f, 0.0f, 1.0f };
 
 		void Initialize ();
 

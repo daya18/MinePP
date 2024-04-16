@@ -33,6 +33,7 @@ namespace mpp
 		void AddScrollCallback ( ScrollCallback );
 
 		glm::vec2 GetSize () const;
+		glm::vec2 const & GetCursorDelta () const;
 
 	private:
 		static void GLFWKeyCallback ( GLFWwindow * window, int key, int scancode, int action, int mods );
@@ -52,6 +53,7 @@ namespace mpp
 
 		glm::vec2 lastMousePosition { 0.0f, 0.0f };
 		bool ignoreNextMouseMotion { false };
+		glm::vec2 cursorDelta { 0.0f, 0.0f };
 	};
 
 
@@ -69,4 +71,5 @@ namespace mpp
 	inline void Window::AddScrollCallback ( ScrollCallback callback )
 	{ scrollCallbacks.push_back ( callback ); }
 
+	inline glm::vec2 const & Window::GetCursorDelta () const { return cursorDelta; }
 }
