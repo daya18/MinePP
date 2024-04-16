@@ -82,8 +82,12 @@ namespace mpp
 
 	void Application::Run ()
 	{
+		lastFixedUpdateTime = std::chrono::steady_clock::now ();
+
 		while ( ! window.ShouldClose () && ! quit )
 		{
+			auto now { std::chrono::steady_clock::now () };
+			
 			glfwPollEvents ();
 
 			scene->Update ( ImGui::GetIO().DeltaTime );

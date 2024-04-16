@@ -25,6 +25,7 @@ namespace mpp
 		void Render () override;
 		void RenderGUI () override;
 		void Update ( float delta ) override;
+
 		bool CheckPaused () const;
 
 	private:

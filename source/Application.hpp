@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <memory>
+#include <chrono>
 
 #include <glad/glad.h>
 #include <imgui.h>
@@ -17,12 +18,14 @@ namespace mpp
 		~Application ();
 
 		void Run ();
-
+		
 		Window & GetWindow ();
 		void Quit ();
 		void SetScene ( std::unique_ptr <Scene> );
 
 	private:
+		std::chrono::steady_clock::duration fixedUpdateInterval { std::chrono::milliseconds ( 16 ) };
+
 		static void GLAPIENTRY debugCallback (
 			GLenum source,
 			GLenum type,
@@ -37,6 +40,7 @@ namespace mpp
 		ImGuiContext * imguiContext;
 		std::unique_ptr <Scene> scene;
 		bool quit { false };
+		std::chrono::steady_clock::time_point lastFixedUpdateTime;
 	};
 
 

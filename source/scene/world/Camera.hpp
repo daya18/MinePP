@@ -43,6 +43,8 @@ namespace mpp
 
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
+		
+		glm::vec2 lastKnownMousePosition { 0.0f, 0.0f };
 	};
 
 

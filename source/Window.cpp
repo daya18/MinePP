@@ -18,8 +18,6 @@ namespace mpp
 
 		glfwSetKeyCallback ( window, GLFWKeyCallback );
 		glfwSetMouseButtonCallback ( window, GLFWButtonCallback );
-		glfwSetCursorPosCallback ( window, GLFWCursorPositionCallback );
-		glfwSetCursorEnterCallback ( window, GLFWCursorEnterCallback );
 		glfwSetScrollCallback ( window, GLFWScrollCallback );
 	}
 	
@@ -36,7 +34,6 @@ namespace mpp
 	void Window::SwapBuffers ()
 	{
 		glfwSwapBuffers ( window );
-		cursorDelta = { 0.0f, 0.0f };
 	}
 	
 	bool Window::GetkeyState ( int key )
@@ -66,6 +63,13 @@ namespace mpp
 		glfwGetFramebufferSize ( window, &size.x, &size.y );
 		return size;
 	}
+	
+	glm::vec2 Window::GetMousePosition () const 
+	{
+		glm::dvec2 position;
+		glfwGetCursorPos ( window, &position.x, &position.y );
+		return position; 
+	}
 
 	void Window::InitImGuiForOpenGL ()
 	{
@@ -86,31 +90,6 @@ namespace mpp
 
 		for ( auto const & buttonCallback : window.buttonCallbacks )
 			buttonCallback ( button, action );
-	}
-
-	void Window::GLFWCursorPositionCallback ( GLFWwindow * glfwWindow, double xpos, double ypos )
-	{
-		auto & window { *GetWindow ( glfwWindow ) };
-		
-		glm::vec2 currentMousePosition { static_cast < float > ( xpos ), static_cast < float > ( ypos ) };
-		
-		if ( ! window.ignoreNextMouseMotion )
-		{
-			window.cursorDelta = currentMousePosition - window.lastMousePosition;
-			
-			for ( auto const & mouseMotionCallback : window.mouseMotionCallbacks )
-				mouseMotionCallback ( window.cursorDelta );
-		}
-		else
-			window.ignoreNextMouseMotion = false;
-
-		window.lastMousePosition = currentMousePosition;
-	}
-
-	void Window::GLFWCursorEnterCallback ( GLFWwindow * glfwWindow, int entered )
-	{
-		if ( entered )
-			GetWindow ( glfwWindow )->ignoreNextMouseMotion = true;
 	}
 	
 	void Window::GLFWScrollCallback ( GLFWwindow * glfwWindow, double xoffset, double yoffset )

@@ -13,8 +13,8 @@
 
 namespace mpp
 {
-	float const Camera::rotateSensitivity { 36.0f };
-	float const Camera::moveSensitivity { 6.0f };
+	float const Camera::rotateSensitivity { 0.2f };
+	float const Camera::moveSensitivity { 10.0f };
 
 	Camera::Camera ( Window & window, World & world, glm::vec3 const & position )
 	:
@@ -26,6 +26,7 @@ namespace mpp
 	{
 		UpdateViewMatrix ();
 		UpdateProjectionMatrix ();
+		lastKnownMousePosition = window.GetMousePosition ();
 	}
 
 	Camera::~Camera ()
@@ -56,8 +57,11 @@ namespace mpp
 		if ( window->GetkeyState ( GLFW_KEY_SPACE ) )
 			this->position += up * moveSensitivity * delta;
 
-		auto rotationDelta { glm::vec3 { window->GetCursorDelta ().y, window->GetCursorDelta ().x, 0.0f } };
-		Rotate ( rotationDelta * rotateSensitivity * delta );
+		auto currentMousePosition { window->GetMousePosition () };
+		auto mouseDelta { currentMousePosition - lastKnownMousePosition };
+		lastKnownMousePosition = currentMousePosition;
+
+		Rotate ( glm::vec3 { mouseDelta.y, mouseDelta.x, 0.0f } * rotateSensitivity );
 
 		UpdateViewMatrix ();
 	}
@@ -71,8 +75,8 @@ namespace mpp
 	void Camera::Rotate ( glm::vec3 delta )
 	{
 		glm::vec3 up { 0.0f, 1.0f, 0.0f };
-		glm::vec3 localRight { glm::cross ( up, lookDirection ) };
-		glm::vec3 localUp { glm::cross ( localRight, lookDirection ) };
+		glm::vec3 localRight { glm::normalize ( glm::cross ( up, lookDirection ) ) };
+		glm::vec3 localUp { glm::normalize ( glm::cross ( localRight, lookDirection ) ) };
 
 		lookDirection = glm::rotate ( lookDirection, glm::radians ( delta.x ) , localRight );
 		lookDirection = glm::rotate ( lookDirection, glm::radians ( delta.y ) , localUp );

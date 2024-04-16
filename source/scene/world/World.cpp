@@ -76,6 +76,7 @@ namespace mpp
 		}
 		else
 			SelectBlock ( nullptr );
+	
 	}
 
 	void World::Render ()
