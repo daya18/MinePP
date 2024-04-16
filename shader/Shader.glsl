@@ -39,7 +39,7 @@ void main ()
 {
 	o_color = texture ( u_sampler, i_textureCoordinates );
 
-	if ( u_useMask )
+	if ( u_useMask == 1 )
 	{
 		float maskSample = texture ( u_maskSampler, i_maskTextureCoordinates ).a;
 		

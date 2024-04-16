@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <GLAD/glad.h>
+#include <glad/glad.h>
 #include <imgui.h>
 
 #include "Window.hpp"

@@ -88,11 +88,13 @@ namespace mpp
 
 	void BlockRenderer::Render ()
 	{
+
 		glEnable ( GL_CULL_FACE );
 
 		if ( ! camera ) return;
 
 		shader.Bind ();
+
 		vertexArray.Bind ();
 		indexBuffer.Bind ( GL_ELEMENT_ARRAY_BUFFER );
 

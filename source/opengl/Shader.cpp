@@ -74,10 +74,30 @@ namespace mpp
 
 			glCompileShader ( shaders.back () );
 
+			GLint success;
+			glGetShaderiv(shaders.back(), GL_COMPILE_STATUS, &success);
+
+			if (!success) {
+				GLint logLength;
+				glGetShaderiv(shaders.back(), GL_INFO_LOG_LENGTH, &logLength);
+				char* log = new char[logLength];
+				glGetShaderInfoLog(shaders.back(), logLength, NULL, log);
+				std::cerr << "Error: Shader compilation failed\n" << log << std::endl;
+				delete[] log;
+			}
+
 			glAttachShader ( program, shaders.back () );
 		}
 
 		glLinkProgram ( program );
+
+		GLint success;
+		GLchar infoLog[512];
+		glGetProgramiv(program, GL_LINK_STATUS, &success);
+		if (!success) {
+			glGetProgramInfoLog(program, 512, NULL, infoLog);
+			std::cerr << "Error: OpenGL program linking failed\n" << infoLog << std::endl;
+		}
 
 		for ( auto const & shader : shaders )
 			glDeleteShader ( shader );

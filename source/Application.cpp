@@ -1,6 +1,7 @@
 #include "Application.hpp"
 
 #include <iostream>
+#include <map>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
@@ -40,7 +41,43 @@ namespace mpp
 
 	void GLAPIENTRY Application::debugCallback ( GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar * message, const void * userParam )
 	{
-		std::cout << "OpenGL Debug Message: " << message << std::endl;
+		if ( severity == GL_DEBUG_SEVERITY_NOTIFICATION )
+			return;
+
+		std::map<GLenum, std::string> sourceMap = {
+				{GL_DEBUG_SOURCE_API, "API"},
+				{GL_DEBUG_SOURCE_WINDOW_SYSTEM, "Window System"},
+				{GL_DEBUG_SOURCE_SHADER_COMPILER, "Shader Compiler"},
+				{GL_DEBUG_SOURCE_THIRD_PARTY, "Third Party"},
+				{GL_DEBUG_SOURCE_APPLICATION, "Application"},
+				{GL_DEBUG_SOURCE_OTHER, "Other"}
+			};
+
+			std::map<GLenum, std::string> typeMap = {
+				{GL_DEBUG_TYPE_ERROR, "Error"},
+				{GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "Deprecated Behavior"},
+				{GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, "Undefined Behavior"},
+				{GL_DEBUG_TYPE_PORTABILITY, "Portability"},
+				{GL_DEBUG_TYPE_PERFORMANCE, "Performance"},
+				{GL_DEBUG_TYPE_MARKER, "Marker"},
+				{GL_DEBUG_TYPE_PUSH_GROUP, "Push Group"},
+				{GL_DEBUG_TYPE_POP_GROUP, "Pop Group"},
+				{GL_DEBUG_TYPE_OTHER, "Other"}
+			};
+
+			std::map<GLenum, std::string> severityMap = {
+				{GL_DEBUG_SEVERITY_HIGH, "High"},
+				{GL_DEBUG_SEVERITY_MEDIUM, "Medium"},
+				{GL_DEBUG_SEVERITY_LOW, "Low"},
+				{GL_DEBUG_SEVERITY_NOTIFICATION, "Notification"}
+			};
+
+			std::cerr << "OpenGL debug message:"
+					<< "\n    Source: " << sourceMap[source]
+					<< "\n    Type: " << typeMap[type]
+					<< "\n    Severity: " << severityMap[severity]
+					<< "\n    ID: " << id
+					<< "\n    Message: " << message << std::endl;
 	}
 
 	void Application::Run ()
