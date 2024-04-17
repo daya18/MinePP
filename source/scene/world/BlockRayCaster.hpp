@@ -2,8 +2,6 @@
 
 #include "../../Constants.hpp"
 
-#include <glm/glm.hpp>
-
 namespace mpp
 {
 	class Block;

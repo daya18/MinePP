@@ -1,7 +1,5 @@
 #pragma once
 
-#include <list>
-
 #include "Camera.hpp"
 #include "Block.hpp"
 #include "BlockRenderer.hpp"

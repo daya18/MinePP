@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
-
 #include "../../gui/Rectangle.hpp"
+
+struct GLTtext;
 
 namespace mpp
 {

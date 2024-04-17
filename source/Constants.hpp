@@ -1,11 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-#include <string>
-#include <array>
-
-#include <glm/glm.hpp>
-
 namespace mpp
 {
 	namespace DirectionVectors

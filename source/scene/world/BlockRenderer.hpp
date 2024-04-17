@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include <glm/glm.hpp>
-
 #include "../../opengl/Shader.hpp"
 #include "../../opengl/VertexArray.hpp"
 #include "../../opengl/Buffer.hpp"

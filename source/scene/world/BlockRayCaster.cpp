@@ -1,12 +1,6 @@
 #include "BlockRayCaster.hpp"
 
-#include <iostream>
-#include <limits>
-
 #include "Block.hpp"
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/intersect.hpp>
 
 namespace mpp
 {

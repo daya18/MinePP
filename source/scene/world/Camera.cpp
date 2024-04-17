@@ -1,15 +1,7 @@
 #include "Camera.hpp"
 
-#include "glm/gtc/matrix_transform.hpp"
-
 #include "World.hpp"
 #include "../../Window.hpp"
-
-#include <iostream>
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 namespace mpp
 {

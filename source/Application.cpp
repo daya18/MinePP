@@ -1,15 +1,5 @@
 #include "Application.hpp"
 
-#include <iostream>
-#include <map>
-
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/gtx/string_cast.hpp>
-
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-
 #include "scene/world/World.hpp"
 #include "scene/MainMenu.hpp"
 
@@ -82,8 +72,6 @@ namespace mpp
 
 	void Application::Run ()
 	{
-		lastFixedUpdateTime = std::chrono::steady_clock::now ();
-
 		while ( ! window.ShouldClose () && ! quit )
 		{
 			auto now { std::chrono::steady_clock::now () };

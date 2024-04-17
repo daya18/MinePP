@@ -1,10 +1,5 @@
 #pragma once
 
-#include <string>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
 #include "../opengl/Shader.hpp"
 #include "../opengl/VertexArray.hpp"
 #include "../opengl/Buffer.hpp"

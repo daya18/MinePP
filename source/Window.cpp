@@ -1,9 +1,5 @@
 #include "Window.hpp"
 
-#include <imgui_impl_glfw.h>
-
-#include <iostream>
-
 namespace mpp
 {
 	Window::Window ( std::string const & title, glm::vec2 const & size )

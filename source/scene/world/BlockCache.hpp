@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <unordered_map>
-
 #include "../../opengl/Texture.hpp"
 
 namespace mpp

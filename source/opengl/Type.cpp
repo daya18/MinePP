@@ -1,7 +1,5 @@
 #include "Type.hpp"
 
-#include <stdexcept>
-
 namespace mpp
 {
 	GLuint GetSize ( GLenum type )

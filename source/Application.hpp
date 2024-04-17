@@ -1,11 +1,5 @@
 #pragma once 
 
-#include <memory>
-#include <chrono>
-
-#include <glad/glad.h>
-#include <imgui.h>
-
 #include "Window.hpp"
 #include "scene/Scene.hpp"
 

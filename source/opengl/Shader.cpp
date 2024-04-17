@@ -1,13 +1,5 @@
 #include "Shader.hpp"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <filesystem>
-#include <cassert>
-
-#include <glm/gtc/type_ptr.hpp>
-
 namespace mpp
 {
 	Shader::Shader ()

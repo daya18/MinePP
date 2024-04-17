@@ -5,8 +5,6 @@
 #include "BlockCache.hpp"
 #include "Inventory.hpp"
 
-#include <iostream>
-
 namespace mpp
 {
 	InventoryHUD::InventoryHUD (
@@ -73,7 +71,7 @@ namespace mpp
 
 		for ( auto const & itemStack : itemStacks )
 			rectangleRenderer->AddRectangle ( itemStack );
-	}
+		}
 	
 	void InventoryHUD::Update ()
 	{

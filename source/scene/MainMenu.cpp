@@ -1,10 +1,6 @@
 #include "MainMenu.hpp"
 
-#include <memory>
-
 #include "../Application.hpp"
-#include "imgui.h"
-
 #include "../Window.hpp"
 #include "world/World.hpp"
 

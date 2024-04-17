@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-
-#include <glad/glad.h>
-
 namespace mpp
 {
 	class Buffer;

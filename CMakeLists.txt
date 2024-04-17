@@ -14,6 +14,7 @@ add_executable ( MinePP )
 	# Add GLAD
 	target_include_directories ( MinePP PRIVATE external/glad/include )
 	target_sources ( MinePP PRIVATE external/glad/src/glad.c  )
+	set_source_files_properties ( external/glad/src/glad.c PROPERTIES LANGUAGE CXX )
 	
 	# Add GLM
 	add_subdirectory ( external/glm )
@@ -62,4 +63,9 @@ target_sources ( MinePP PRIVATE
 	"source/gui/RectangleRenderer.cpp" 
 	"source/gui/BlockThumbnailRenderer.cpp" 
 	"source/scene/world/BlockCache.cpp"
- "source/opengl/Framebuffer.cpp" "source/scene/Scene.cpp" "source/scene/MainMenu.cpp")
+	"source/opengl/Framebuffer.cpp"  
+	"source/scene/MainMenu.cpp"
+)
+
+# Set precompiled header
+target_precompile_headers ( MinePP PRIVATE source/PrecompiledHeader.hpp )

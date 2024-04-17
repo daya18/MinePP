@@ -1,9 +1,5 @@
 #include "World.hpp"
 
-#include <iostream>
-
-#include "imgui.h"
-
 #include "../../Application.hpp"
 #include "../../Window.hpp"
 
@@ -111,6 +107,7 @@ namespace mpp
 			
 			ImGui::End ();
 		}
+
 	}
 
 	void World::SelectBlock ( Block * block )
