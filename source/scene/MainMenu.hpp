@@ -13,7 +13,7 @@ namespace mpp
 		MainMenu ( Application & );
 
 		void Render () override;
-		void RenderGUI () override;
+		void RenderImGui () override;
 		void Update ( float delta ) override;
 
 	private:

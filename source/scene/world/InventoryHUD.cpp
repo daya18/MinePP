@@ -4,25 +4,24 @@
 #include "../../Window.hpp"
 #include "BlockCache.hpp"
 #include "Inventory.hpp"
+#include "World.hpp"
+#include "../../Application.hpp"
 
 namespace mpp
 {
-	InventoryHUD::InventoryHUD (
-		BlockCache & blockCache,
-		RectangleRenderer & rectangleRenderer,
-		Window & window,
-		Inventory const & inventory )
+	InventoryHUD::InventoryHUD ( World & world, Inventory const & inventory )
 	: 
+		world ( & world ),
 		inventory ( & inventory ),
-		blockCache ( & blockCache ),
-		window ( & window ),
-		rectangleRenderer ( &rectangleRenderer )
+		blockCache ( & world.GetBlockCache () ),
+		window ( & world.GetApplication ().GetWindow () ),
+		rectangleRenderer ( & world.GetRectangleRenderer () )
 	{
 		Initialize ();
 
 		SelectItemSlot ( 0 );
 
-		window.AddScrollCallback ( [ this ] ( glm::vec2 offset ) {
+		window->AddScrollCallback ( [ this ] ( glm::vec2 offset ) {
 			if ( offset.y > 0.0f )
 				SelectItemSlot ( selectedSlot - 1 );
 			else if ( offset.y < 0.0f )
@@ -44,7 +43,7 @@ namespace mpp
 			( rectangleRenderer->GetWindow ().GetSize ().x - background.GetTransform ().GetScale ().x ) * 0.5f,
 			rectangleRenderer->GetWindow ().GetSize ().y - background.GetTransform ().GetScale ().y - inventoryHUDBottomMargin,
 			0.0f
-			} );
+		} );
 
 		rectangleRenderer->AddRectangle ( background );
 
@@ -71,7 +70,7 @@ namespace mpp
 
 		for ( auto const & itemStack : itemStacks )
 			rectangleRenderer->AddRectangle ( itemStack );
-		}
+	}
 	
 	void InventoryHUD::Update ()
 	{

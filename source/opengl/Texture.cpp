@@ -8,6 +8,13 @@ namespace mpp
 	Texture::Texture ()
 	{
 		glGenTextures ( 1, &texture );
+		
+		Bind ();
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+		Unbind ();
 	}
 
 	Texture::Texture ( glm::vec2 const & size )
@@ -16,7 +23,6 @@ namespace mpp
 		Bind ();
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr );
 		this->size = size;
-		SetDefaultParameters ();
 		Unbind ();
 	}
 
@@ -32,7 +38,13 @@ namespace mpp
 		Bind ();
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
 		size = { width, height };
-		SetDefaultParameters ();
+		Unbind ();
+	}
+	
+	void Texture::SetData ( unsigned char const * data, glm::vec2 const & size, GLenum format )
+	{
+		Bind ();
+		glTexImage2D ( GL_TEXTURE_2D, 0, format, size.x, size.y, 0, format, GL_UNSIGNED_BYTE, data );
 		Unbind ();
 	}
 
@@ -47,14 +59,4 @@ namespace mpp
 		glActiveTexture ( GL_TEXTURE0 + unit );
 		glBindTexture ( GL_TEXTURE_2D, 0 );
 	}
-
-	void Texture::SetDefaultParameters ()
-	{
-		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-
-		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-	}
-
 }

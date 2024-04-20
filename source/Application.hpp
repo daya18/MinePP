@@ -14,6 +14,7 @@ namespace mpp
 		void Run ();
 		
 		Window & GetWindow ();
+
 		void Quit ();
 		void SetScene ( std::unique_ptr <Scene> );
 
@@ -34,7 +35,6 @@ namespace mpp
 		ImGuiContext * imguiContext;
 		std::unique_ptr <Scene> scene;
 		bool quit { false };
-		std::chrono::steady_clock::time_point lastFixedUpdateTime;
 	};
 
 

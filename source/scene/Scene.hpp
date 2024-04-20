@@ -6,7 +6,7 @@ namespace mpp
 	{
 	public:
 		virtual void Render () {};
-		virtual void RenderGUI () {};
+		virtual void RenderImGui () {};
 		virtual void Update ( float delta ) {};
 	};
 }

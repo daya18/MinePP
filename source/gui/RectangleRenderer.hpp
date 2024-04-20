@@ -9,6 +9,7 @@ namespace mpp
 {
 	class Window;
 	class Rectangle;
+	class Text;
 
 	class RectangleRenderer
 	{
@@ -18,7 +19,7 @@ namespace mpp
 
 		void AddRectangle ( Rectangle const & );
 		void RemoveRectangle ( Rectangle const & );
-
+		
 		void Render ();
 		Window & GetWindow ();
 

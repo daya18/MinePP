@@ -10,6 +10,7 @@
 #include "BlockCache.hpp"
 #include "Inventory.hpp"
 #include "../Scene.hpp"
+#include "../../gui/TextRenderer.hpp"
 
 namespace mpp
 {
@@ -21,10 +22,15 @@ namespace mpp
 		World ( Application & );
 
 		void Render () override;
-		void RenderGUI () override;
+		void RenderImGui () override;
 		void Update ( float delta ) override;
 
 		bool CheckPaused () const;
+		
+		Application & GetApplication ();
+		BlockCache & GetBlockCache ();
+		RectangleRenderer & GetRectangleRenderer ();
+		TextRenderer & GetTextRenderer ();
 
 	private:
 		void CreateBlock ( std::string const &, glm::vec3 const & );
@@ -46,6 +52,7 @@ namespace mpp
 		Block * selectedBlock { nullptr };
 		Directions selectedBlockFaceDirection;
 		RectangleRenderer rectangleRenderer;
+		TextRenderer textRenderer;
 		Inventory playerInventory;
 		InventoryHUD inventoryHud;
 		bool paused { false };
@@ -55,4 +62,8 @@ namespace mpp
 
 	// Implementation
 	inline bool World::CheckPaused () const { return paused; }
+	inline Application & World::GetApplication () { return *application; }
+	inline BlockCache & World::GetBlockCache () { return blockCache; }
+	inline RectangleRenderer & World::GetRectangleRenderer () { return rectangleRenderer; }
+	inline TextRenderer & World::GetTextRenderer () { return textRenderer; }
 }

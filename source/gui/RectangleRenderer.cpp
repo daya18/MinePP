@@ -15,8 +15,6 @@ namespace mpp
 	{
 		SetViewportSize ( window.GetSize () );
 
-		glm::vec2 faceTextureSize { 1.0f / 3.0f, 1.0f / 2.0f };
-
 		std::vector <float> vertices
 		{
 			 1.0f,  0.0f,  0.0f,  1.0f, 1.0f,

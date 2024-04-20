@@ -32,3 +32,9 @@
 #include <imgui_impl_glfw.h>
 
 #include <GLFW/glfw3.h>
+
+#include <glText/gltext.h>
+
+#include <ft2build.h>
+#include <freetype/freetype.h>
+#include <freetype/ftbitmap.h>

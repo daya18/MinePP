@@ -6,15 +6,16 @@
 namespace mpp
 {
 	World::World ( Application & application )
-	:
+		:
 		application ( &application ),
 		window ( & application.GetWindow () ),
 		camera ( *window, *this, { 0.0f, 0.0f, 5.0f } ),
 		blockRenderer ( blockCache ),
 		blockCache ( blockThumbnailRenderer ),
 		rectangleRenderer ( *window ),
+		textRenderer ( *window, "font/Roboto/Roboto-Regular.ttf" ),
 		playerInventory ( 20 ),
-		inventoryHud ( blockCache, rectangleRenderer, *window, playerInventory )
+		inventoryHud ( *this, playerInventory )
 	{
 		blockRenderer.SetCamera ( camera );
 
@@ -79,9 +80,10 @@ namespace mpp
 	{
 		blockRenderer.Render ();
 		rectangleRenderer.Render ();
+		textRenderer.Render ();
 	}
 
-	void World::RenderGUI ()
+	void World::RenderImGui ()
 	{
 		RenderCrosshair ();
 

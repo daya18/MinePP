@@ -41,6 +41,10 @@ add_executable ( MinePP )
 	# Add stb image
 	target_include_directories ( MinePP PRIVATE external )
 
+	# Add freetype
+	add_subdirectory ( external/freetype-2.10.0 )
+	target_link_libraries ( MinePP PRIVATE freetype )
+
 # Set sources
 target_sources ( MinePP PRIVATE 
 	source/Application.cpp 
@@ -65,7 +69,8 @@ target_sources ( MinePP PRIVATE
 	"source/scene/world/BlockCache.cpp"
 	"source/opengl/Framebuffer.cpp"  
 	"source/scene/MainMenu.cpp"
-)
+	"source/gui/Text.cpp"
+ "source/gui/TextRenderer.cpp")
 
 # Set precompiled header
 target_precompile_headers ( MinePP PRIVATE source/PrecompiledHeader.hpp )

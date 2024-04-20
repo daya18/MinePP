@@ -1,11 +1,11 @@
 #pragma once
 
 #include "../../gui/Rectangle.hpp"
-
-struct GLTtext;
+#include "../../gui/Text.hpp"
 
 namespace mpp
 {
+	class World;
 	class BlockCache;
 	class RectangleRenderer;
 	class Window;
@@ -14,7 +14,7 @@ namespace mpp
 	class InventoryHUD
 	{
 	public:
-		InventoryHUD ( BlockCache &, RectangleRenderer &, Window &, Inventory const & );
+		InventoryHUD ( World &, Inventory const & );
 
 		void Update ();
 		void SelectItemSlot ( int index );
@@ -31,6 +31,7 @@ namespace mpp
 
 		void Initialize ();
 
+		World * world;
 		BlockCache * blockCache;
 		RectangleRenderer * rectangleRenderer;
 		Window * window;
@@ -40,6 +41,7 @@ namespace mpp
 		std::vector <Rectangle> itemSlots;
 		std::vector <Rectangle> itemStacks;
 		int selectedSlot { 0 };
+		Text text;
 	};
 
 

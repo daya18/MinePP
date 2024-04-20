@@ -16,7 +16,7 @@ namespace mpp
 	{
 	}
 
-	void MainMenu::RenderGUI ()
+	void MainMenu::RenderImGui ()
 	{
 		ImGui::ShowDemoWindow ();
 
