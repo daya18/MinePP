@@ -10,7 +10,7 @@
 namespace mpp
 {
 	class Window;
-	class Text;
+	struct Text;
 
 	class TextRenderer
 	{
@@ -25,7 +25,6 @@ namespace mpp
 		
 		void AddText ( Text const & );
 		void RemoveText ( Text const & );
-		glm::vec2 GetTextSize ( Text const & );
 
 		void Render ();
 
@@ -54,6 +53,11 @@ namespace mpp
 			std::vector <GlyphData> glyphDatas;
 		};
 
+		std::vector <Glyph const *> GetGlyphs ( Text text );
+		void CalculateMaxAscentDescent ( std::vector <Glyph const *> const & glyphs, float & ascent, float & descent );
+		float CalculateWidth ( std::vector <Glyph const *> const & glyphs );
+		void RenderGlyph ( Glyph const &, glm::vec3 const & position, glm::vec2 const & scale, glm::vec4 const & color );
+
 		FT_Library library;
 		FT_Face face;
 		std::vector <Glyph> glyphs;
@@ -62,11 +66,7 @@ namespace mpp
 		mpp::Buffer indexBuffer;
 		mpp::VertexArray vertexArray;
 		glm::mat4 projectionMatrix { glm::identity <glm::mat4> () };
-		std::unordered_map <Text const *, TextData> textDatas;
+		std::vector <Text const *> texts;
+		//std::unordered_map <Text const *, TextData> textDatas;
 	};
-
-
-
-	// Implementation
-	inline glm::vec2 TextRenderer::GetTextSize ( Text const & text ) { return textDatas.at ( &text ).size; }
 }

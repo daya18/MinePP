@@ -2,8 +2,8 @@
 
 namespace mpp
 {
-	Transform::Transform ( glm::vec3 const & position )
-		: position ( position )
+	Transform::Transform ( glm::vec3 const & position, glm::vec3 const & scale )
+		: position ( position ), scale ( scale )
 	{
 		UpdateMatrix ();
 	}

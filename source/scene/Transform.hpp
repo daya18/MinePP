@@ -5,7 +5,7 @@ namespace mpp
 	class Transform
 	{
 	public:
-		Transform ( glm::vec3 const & position = glm::zero <glm::vec3> () );
+		Transform ( glm::vec3 const & position = glm::zero <glm::vec3> (), glm::vec3 const & scale = glm::one <glm::vec3> () );
 
 		void SetPosition ( glm::vec3 const & );
 		void Move ( glm::vec3 const & );

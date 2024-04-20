@@ -31,5 +31,5 @@ uniform sampler2D u_texture;
 
 void main ()
 {
-	o_color = vec4 ( texture ( u_texture, i_textureCoordinates ).r, 0.0f, 0.0f, 1.0f );
+	o_color = vec4 ( u_color.rgb, texture ( u_texture, i_textureCoordinates ).r );
 }

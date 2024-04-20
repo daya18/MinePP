@@ -21,6 +21,13 @@ namespace mpp
 		int GetSelectedItemSlot () const;
 
 	private:
+		struct ItemSlotGUI
+		{
+			Rectangle itemSlot;
+			Rectangle itemStack;
+			Text itemCount;
+		};
+
 		float itemSlotSize { 70.0f };
 		int itemSlotCount { 6 };
 		float itemSlotMargin { 6.0f };
@@ -38,10 +45,8 @@ namespace mpp
 		Inventory const * inventory;
 
 		Rectangle background;
-		std::vector <Rectangle> itemSlots;
-		std::vector <Rectangle> itemStacks;
+		std::vector <ItemSlotGUI> itemSlots;
 		int selectedSlot { 0 };
-		Text text;
 	};
 
 

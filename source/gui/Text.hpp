@@ -4,25 +4,11 @@
 
 namespace mpp
 {
-	class Text
+	struct Text
 	{
-	public:
-		Transform const & GetTransform () const;
-		Transform & GetTransform ();
-
-		void SetText ( std::string const & );
-		std::string const & GetText () const;
-
-	private:
 		Transform transform;
-		std::string text;
+		std::string text {};
+		glm::vec4 color { 1.0f, 1.0f, 0.0f, 1.0f };
+		glm::vec2 origin { 0.0f, 0.0f };
 	};
-	
-
-
-	// Implementation
-	inline Transform const & Text::GetTransform () const { return transform; }
-	inline Transform & Text::GetTransform () { return transform; }
-	inline void Text::SetText ( std::string const & text ) { this->text = text; }
-	inline std::string const & Text::GetText () const { return text; }
 }
