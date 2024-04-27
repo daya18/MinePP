@@ -10,17 +10,15 @@ namespace mpp
 		application ( &application ),
 		window ( & application.GetWindow () ),
 		camera ( *window, *this, { 0.0f, 0.0f, 5.0f } ),
-		blockRenderer ( blockCache ),
+		cache ( blockCache ),
 		blockCache ( blockThumbnailRenderer ),
 		rectangleRenderer ( *window ),
 		textRenderer ( *window, "font/Roboto/Roboto-Regular.ttf" ),
 		playerInventory ( 20 ),
 		inventoryHud ( *this, playerInventory )
 	{
-		blockRenderer.SetCamera ( camera );
-
-		CreateBlock ( "Grass", { 0, 0, 0 } );
-		CreateBlock ( "Grass", { 2, 0, 0 } );
+		chunks.emplace_back ( Chunk { *this, { 0, 0, 0 } } );
+		chunks.emplace_back ( Chunk { *this, { Chunk::GetSize ().x, 0.0f, 0.0f } } );
 
 		window->AddButtonCallback ( [this] ( int button, int action ) { OnButtonAction ( button, action ); } );
 		window->AddKeyCallback ( [ this ] ( int key, int action ) { OnKeyAction ( key, action ); } );
@@ -34,51 +32,20 @@ namespace mpp
 		SetPaused ( false );
 	}
 	
-	void World::CreateBlock ( std::string const & type, glm::vec3 const & position )
-	{
-		blocks.push_back ( { type, position } );
-		blockRenderer.AddBlock ( blocks.back () );
-		blockRayCaster.AddBlock ( blocks.back () );
-	}
-
-	void World::DestroyBlock ( Block * block )
-	{
-		blockRenderer.DeleteBlock ( *block );
-		blockRayCaster.DeleteBlock ( *block );
-		
-		for ( auto it { blocks.begin () }; it != blocks.end (); ++it )
-		{
-			if ( &*it == block )
-			{
-				blocks.erase ( it );
-				break;
-			}
-		}
-	}
-
 	void World::Update ( float delta )
 	{
 		if ( paused )
 			return;
 
 		camera.Update ( delta );
-
-		auto intersection { blockRayCaster.CheckRayIntersection ( 
-			{ camera.GetPosition (), glm::normalize ( camera.GetLookDirection () ) } ) };
-		
-		if ( intersection.intersects )
-		{
-			SelectBlock ( const_cast < Block * > ( intersection.block ) );
-			selectedBlockFaceDirection = intersection.faceDirection;
-		}
-		else
-			SelectBlock ( nullptr );
-	
+		HandleSelection ();
 	}
 
 	void World::Render ()
 	{
-		blockRenderer.Render ();
+		for ( auto & chunk : chunks )
+			chunk.Render ( camera );
+
 		rectangleRenderer.Render ();
 		textRenderer.Render ();
 	}
@@ -154,7 +121,9 @@ namespace mpp
 			{
 				if ( button == GLFW_MOUSE_BUTTON_LEFT )
 				{
-					DestroyBlock ( selectedBlock );
+					if ( selectedBlock )
+						selectedBlock->SetType ( "Air" );
+
 					selectedBlock = nullptr;
 				}
 
@@ -169,7 +138,15 @@ namespace mpp
 						auto const & selectedSlot { playerInventory.GetSlot ( selectedSlotIndex ) };
 
 						if ( selectedSlot.HasStack () )
-							CreateBlock ( selectedSlot.GetStack ().GetItemType (), position );
+						{
+							for ( auto & chunk : chunks )
+							{
+								auto block { chunk.GetBlock ( position ) };
+								
+								if ( block )
+									block->SetType ( selectedSlot.GetStack ().GetItemType () );
+							}
+						}
 					}
 				}
 			}
@@ -194,4 +171,56 @@ namespace mpp
 		ImGui::PopStyleVar ();
 	}
 
+	void World::HandleSelection ()
+	{
+		Ray selectionRay { camera.GetPosition (), glm::normalize ( camera.GetLookDirection () ) };
+		
+			
+		Block const * block; Directions faceDirection; float distance;
+		auto intersects { CheckRayIntersectionWithBlock ( selectionRay, block, faceDirection, distance ) };
+		if ( intersects )
+		{
+			SelectBlock ( const_cast < Block * > ( block ) );
+			selectedBlockFaceDirection = faceDirection;
+		}
+		else
+		{
+			SelectBlock ( nullptr );
+		}
+	}
+
+	bool World::CheckRayIntersectionWithBlock ( Ray const & ray, Block const * & block, Directions & faceDirection, float & distance )
+	{
+		struct BlockIntersection
+		{
+			Block const * block;
+			Directions faceDirection;
+			float distance;
+		};
+
+		std::vector <BlockIntersection> blockIntersections;
+
+		for ( auto & chunk : chunks )
+		{
+			BlockIntersection intersection;
+			if ( chunk.CheckRayIntersection ( ray, intersection.block, intersection.faceDirection, intersection.distance ) )
+				blockIntersections.push_back ( intersection );
+		}
+
+		block = nullptr;
+		faceDirection = Directions::down;
+		distance = std::numeric_limits <float>::infinity ();
+
+		for ( auto const & blockIntersection : blockIntersections )
+		{
+			if ( blockIntersection.distance < distance )
+			{
+				block = blockIntersection.block;
+				faceDirection = blockIntersection.faceDirection;
+				distance = blockIntersection.distance;
+			}
+		}
+
+		return ! blockIntersections.empty ();
+	}
 }

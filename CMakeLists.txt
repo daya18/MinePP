@@ -56,10 +56,10 @@ target_sources ( MinePP PRIVATE
 	"source/scene/world/Camera.cpp" 
 	source/main.cpp
 	source/Window.cpp
-	"source/scene/world/BlockRenderer.cpp" 
+	"source/scene/world/WorldCache.cpp" 
 	"source/opengl/Texture.cpp" 
 	"source/scene/world/Block.cpp" 
-	"source/scene/world/BlockRayCaster.cpp"
+	
 	"source/scene/Transform.cpp" 
 	 
 	"source/scene/world/InventoryHUD.cpp" 
@@ -70,7 +70,7 @@ target_sources ( MinePP PRIVATE
 	"source/opengl/Framebuffer.cpp"  
 	"source/scene/MainMenu.cpp"
 	"source/gui/Text.cpp"
- "source/gui/TextRenderer.cpp")
+ "source/gui/TextRenderer.cpp"   "source/scene/world/Chunk.cpp")
 
 # Set precompiled header
 target_precompile_headers ( MinePP PRIVATE source/PrecompiledHeader.hpp )

@@ -1,12 +1,38 @@
-#include "BlockRenderer.hpp"
+#include "WorldCache.hpp"
 
 #include "Camera.hpp"
 #include "Block.hpp"
 #include "BlockCache.hpp"
+#include "Chunk.hpp"
 
 namespace mpp
 {
-	BlockRenderer::BlockRenderer ( BlockCache & blockCache )
+	std::array <glm::vec3, 8> const WorldCache::blockVertices
+	{
+		// Front plane ( Z+ )
+		glm::vec3 { -1.0f, -1.0f, 1.0f }, // 0
+		glm::vec3 { -1.0f,  1.0f, 1.0f }, // 1
+		glm::vec3 {  1.0f,  1.0f, 1.0f }, // 2
+		glm::vec3 {  1.0f, -1.0f, 1.0f }, // 3
+
+		// Back plane ( Z- )
+		glm::vec3 { -1.0f, -1.0f, -1.0f }, // 4
+		glm::vec3 { -1.0f,  1.0f, -1.0f }, // 5
+		glm::vec3 {  1.0f,  1.0f, -1.0f }, // 6
+		glm::vec3 {  1.0f, -1.0f, -1.0f }, // 7
+	};
+
+	std::unordered_map <Directions, std::array < std::array <uint32_t, 3>, 2 > > WorldCache::blockIndices
+	{
+		{ Directions::forward,	{ std::array <uint32_t, 3> { 0, 1, 2 }, std::array <uint32_t, 3> { 2, 3, 0 } } },
+		{ Directions::back,		{ std::array <uint32_t, 3> { 4, 5, 6 }, std::array <uint32_t, 3> { 6, 7, 4 } } },
+		{ Directions::left,		{ std::array <uint32_t, 3> { 0, 1, 5 }, std::array <uint32_t, 3> { 5, 4, 0 } } },
+		{ Directions::right,	{ std::array <uint32_t, 3> { 6, 7, 3 }, std::array <uint32_t, 3> { 3, 2, 6 } } },
+		{ Directions::up,		{ std::array <uint32_t, 3> { 1, 5, 6 }, std::array <uint32_t, 3> { 6, 2, 1 } } },
+		{ Directions::down,		{ std::array <uint32_t, 3> { 4, 0, 3 }, std::array <uint32_t, 3> { 3, 7, 4 } } },
+	};
+
+	WorldCache::WorldCache ( BlockCache & blockCache )
 	:
 		blockCache ( &blockCache ),
 		shader ( "shader/Shader.glsl" ),
@@ -67,62 +93,7 @@ namespace mpp
 		vertexArray.BindVertexBuffer ( vertexBuffer );
 	}
 
-	BlockRenderer::~BlockRenderer ()
+	WorldCache::~WorldCache ()
 	{
-	}
-	
-	void BlockRenderer::SetCamera ( Camera const & camera )
-	{
-		this->camera = & camera;
-	}
-
-	void BlockRenderer::AddBlock ( Block const & block )
-	{
-		blocks.push_back ( &block );
-	}
-
-	void BlockRenderer::DeleteBlock ( Block const & block )
-	{
-		std::erase ( blocks, &block );
-	}
-
-	void BlockRenderer::Render ()
-	{
-
-		glEnable ( GL_CULL_FACE );
-
-		if ( ! camera ) return;
-
-		shader.Bind ();
-
-		vertexArray.Bind ();
-		indexBuffer.Bind ( GL_ELEMENT_ARRAY_BUFFER );
-
-		shader.SetUniform ( "u_viewMatrix", camera->GetViewMatrix () );
-		shader.SetUniform ( "u_projectionMatrix", camera->GetProjectionMatrix () );
-
-		shader.SetUniform ( "u_sampler", 0 );
-
-
-		for ( auto const & block : blocks )
-		{
-			auto transform { block->GetTransform () };
-			shader.SetUniform ( "u_modelMatrix", transform.GetMatrix () );
-			
-			blockCache->GetBlockTexture ( block->GetType () ).Bind ( 0 );
-			
-			shader.SetUniform ( "u_useMask", block->GetHighlighted () );
-			
-			if ( block->GetHighlighted () )
-			{
-				shader.SetUniform ( "u_maskSampler", 1 );
-				outlineMask.Bind ( 1 );
-			}
-
-
-			glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
-		}
-
-		glDisable ( GL_CULL_FACE );
 	}
 }

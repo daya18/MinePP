@@ -6,29 +6,24 @@
 #include "../../opengl/VertexArray.hpp"
 #include "../../opengl/Buffer.hpp"
 #include "../../opengl/Texture.hpp"
+#include "../../core/Constants.hpp"
 
 namespace mpp
 {
 	class BlockCache;
-	class Block;
 
-	class BlockRenderer
+	class WorldCache
 	{
 	public:
-		BlockRenderer ( BlockCache & );
-		~BlockRenderer ();
-
-		void SetCamera ( Camera const & );
-		void AddBlock ( Block const & );
-		void DeleteBlock ( Block const & );
-
-		void Render ();
+		WorldCache ( BlockCache & );
+		~WorldCache ();
 
 	private:
 		BlockCache * blockCache;
-
-		Camera const * camera { nullptr };
-
+		
+		static std::array <glm::vec3, 8> const blockVertices;
+		static std::unordered_map <Directions, std::array < std::array <uint32_t, 3>, 2 > > blockIndices;
+		
 		mpp::Shader shader;
 		mpp::Buffer vertexBuffer;
 		mpp::Buffer indexBuffer;
@@ -36,6 +31,7 @@ namespace mpp
 		mpp::Texture texture;
 		mpp::Texture outlineMask;
 
-		std::vector <Block const *> blocks;
+		friend class Chunk;
+		friend class Block;
 	};
 }

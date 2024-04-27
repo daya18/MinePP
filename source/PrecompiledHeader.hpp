@@ -25,6 +25,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <glm/gtx/hash.hpp>
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include <imgui_impl_glfw.h>
