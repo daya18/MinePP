@@ -4,6 +4,7 @@
 #include "Camera.hpp"
 #include "BlockCache.hpp"
 #include "World.hpp"
+#include "../../core/Utility.hpp"
 
 namespace mpp
 {
@@ -11,10 +12,9 @@ namespace mpp
 
 	Chunk::Chunk ( World & world, glm::vec3 const & position )
 	: 
-		world ( & world )
+		world ( & world ),
+		position ( position )
 	{
-		//blocks.emplace ( position, Block { *this, "Grass", position } );
-
 		glm::vec3 chunkBegin { position - size * 0.5f };
 		glm::vec3 chunkEnd { position + size * 0.5f };
 
@@ -25,11 +25,12 @@ namespace mpp
 				for ( float z { chunkBegin.z }; z < chunkEnd.z; ++z )
 				{
 					glm::vec3 position { x, y, z };
-					position *= 2.0f;
 					blocks.emplace ( position, Block { *this, "Grass", position } );
 				}
 			}
 		}
+
+		UpdateBatches ();
 	}
 	
 	Chunk::~Chunk ()
@@ -45,6 +46,8 @@ namespace mpp
 	{
 		world = r.world;
 		blocks = std::move ( r.blocks );
+		position = std::move ( r.position );
+		batches = std::move ( r.batches );
 
 		for ( auto & [ position, block ]: blocks )
 			block.SetChunk ( *this );
@@ -58,10 +61,15 @@ namespace mpp
 		return blockIt == blocks.end () ? nullptr : & blockIt->second;
 	}
 	
+	void Chunk::Update ()
+	{
+		UpdateBatches ();
+	}
+
 	void Chunk::Render ( Camera const & camera )
 	{
 		auto & worldCache { world->GetCache () };
-		
+
 		glEnable ( GL_CULL_FACE );
 
 		worldCache.shader.Bind ();
@@ -71,21 +79,24 @@ namespace mpp
 
 		worldCache.shader.SetUniform ( "u_viewMatrix", camera.GetViewMatrix () );
 		worldCache.shader.SetUniform ( "u_projectionMatrix", camera.GetProjectionMatrix () );
-
-		worldCache.shader.SetUniform ( "u_sampler", 0 );
-
-		for ( auto const & [ position, block ]: blocks )
-			block.Render ();
+		
+		for ( auto & [type, batch] : batches )
+			batch.Render ( worldCache.shader );
 
 		glDisable ( GL_CULL_FACE );
 	}
 
-	bool Chunk::CheckRayIntersection ( Ray const & ray, Block const * & block, Directions & faceDirection, float & distance )
+	bool Chunk::CheckRayIntersection ( Ray const & ray, Block const * & block, glm::vec3 & normal, float & distance )
 	{
+		auto rayEnd { ray.origin + ray.direction };
+		
+		if ( ! CheckPointInBox ( rayEnd, { position, size } ) )
+			return false;
+
 		struct BlockIntersection
 		{
 			Block const * block;
-			Directions faceDirection;
+			glm::vec3 faceNormal;
 			float distance;
 		};
 
@@ -93,15 +104,13 @@ namespace mpp
 
 		for ( auto const & [ position, block ]: blocks )
 		{
-			Directions faceDirection; float distance;
-			auto intersects { block.CheckRayIntersection ( ray, faceDirection, distance ) };
-			
-			if ( intersects )
-				blockIntersections.push_back ( { &block, faceDirection, distance } );
+			BlockIntersection intersection { &block };
+			auto intersects { block.CheckRayIntersection ( ray, intersection.faceNormal, intersection.distance ) };
+			if ( intersects ) blockIntersections.push_back ( intersection );
 		}
 
 		block = nullptr; 
-		faceDirection = Directions::down; 
+		normal = glm::zero <glm::vec3> (); 
 		distance = std::numeric_limits <float>::infinity ();
 
 		for ( auto const & blockIntersection : blockIntersections )
@@ -109,11 +118,29 @@ namespace mpp
 			if ( blockIntersection.distance < distance )
 			{
 				block = blockIntersection.block;
-				faceDirection = blockIntersection.faceDirection;
+				normal = blockIntersection.faceNormal;
 				distance = blockIntersection.distance;
 			}
 		}
 
 		return ! blockIntersections.empty ();
+	}
+
+	void Chunk::UpdateBatches ()
+	{	
+		std::unordered_map <std::string, std::vector <Block *> > typeBlocks;
+
+		for ( auto & [position, block] : blocks )
+		{
+			if ( block.GetType () == "Air" )
+				continue;
+
+			typeBlocks [ block.GetType () ].push_back ( &block );
+		}
+
+		batches.clear ();
+		
+		for ( auto const & [type, blocks] : typeBlocks )
+			batches.emplace ( type, Batch { world->GetCache ().blockCache->GetBlockTexture ( type ), blocks } );
 	}
 }

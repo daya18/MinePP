@@ -70,7 +70,7 @@ target_sources ( MinePP PRIVATE
 	"source/opengl/Framebuffer.cpp"  
 	"source/scene/MainMenu.cpp"
 	"source/gui/Text.cpp"
- "source/gui/TextRenderer.cpp"   "source/scene/world/Chunk.cpp")
+ "source/gui/TextRenderer.cpp"   "source/scene/world/Chunk.cpp"  "source/core/Utility.cpp" "source/core/Ray.cpp" "source/scene/world/Batch.cpp")
 
 # Set precompiled header
 target_precompile_headers ( MinePP PRIVATE source/PrecompiledHeader.hpp )

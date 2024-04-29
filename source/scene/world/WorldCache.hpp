@@ -21,9 +21,6 @@ namespace mpp
 	private:
 		BlockCache * blockCache;
 		
-		static std::array <glm::vec3, 8> const blockVertices;
-		static std::unordered_map <Directions, std::array < std::array <uint32_t, 3>, 2 > > blockIndices;
-		
 		mpp::Shader shader;
 		mpp::Buffer vertexBuffer;
 		mpp::Buffer indexBuffer;

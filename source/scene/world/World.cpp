@@ -122,7 +122,10 @@ namespace mpp
 				if ( button == GLFW_MOUSE_BUTTON_LEFT )
 				{
 					if ( selectedBlock )
+					{
 						selectedBlock->SetType ( "Air" );
+						selectedBlock->GetChunk ().Update ();
+					}
 
 					selectedBlock = nullptr;
 				}
@@ -131,8 +134,8 @@ namespace mpp
 				{
 					if ( selectedBlock )
 					{
-						auto position { selectedBlock->GetTransform ().GetPosition () };
-						position += directionVectors.at ( selectedBlockFaceDirection ) * 2.0f;
+						auto position { selectedBlock->GetPosition () };
+						position += selectedBlockFaceNormal * 2.0f;
 
 						int selectedSlotIndex { inventoryHud.GetSelectedItemSlot () };
 						auto const & selectedSlot { playerInventory.GetSlot ( selectedSlotIndex ) };
@@ -144,7 +147,10 @@ namespace mpp
 								auto block { chunk.GetBlock ( position ) };
 								
 								if ( block )
+								{
 									block->SetType ( selectedSlot.GetStack ().GetItemType () );
+									chunk.Update ();
+								}
 							}
 						}
 					}
@@ -173,15 +179,14 @@ namespace mpp
 
 	void World::HandleSelection ()
 	{
-		Ray selectionRay { camera.GetPosition (), glm::normalize ( camera.GetLookDirection () ) };
-		
+		Ray selectionRay { camera.GetPosition (), glm::normalize ( camera.GetLookDirection () ) * 5.0f };	
 			
-		Block const * block; Directions faceDirection; float distance;
-		auto intersects { CheckRayIntersectionWithBlock ( selectionRay, block, faceDirection, distance ) };
+		Block const * block; glm::vec3 faceNormal; float distance;
+		auto intersects { CheckRayIntersectionWithBlock ( selectionRay, block, faceNormal, distance ) };
 		if ( intersects )
 		{
 			SelectBlock ( const_cast < Block * > ( block ) );
-			selectedBlockFaceDirection = faceDirection;
+			selectedBlockFaceNormal = faceNormal;
 		}
 		else
 		{
@@ -189,12 +194,12 @@ namespace mpp
 		}
 	}
 
-	bool World::CheckRayIntersectionWithBlock ( Ray const & ray, Block const * & block, Directions & faceDirection, float & distance )
+	bool World::CheckRayIntersectionWithBlock ( Ray const & ray, Block const * & block, glm::vec3 & normal, float & distance )
 	{
 		struct BlockIntersection
 		{
 			Block const * block;
-			Directions faceDirection;
+			glm::vec3 normal;
 			float distance;
 		};
 
@@ -203,12 +208,12 @@ namespace mpp
 		for ( auto & chunk : chunks )
 		{
 			BlockIntersection intersection;
-			if ( chunk.CheckRayIntersection ( ray, intersection.block, intersection.faceDirection, intersection.distance ) )
+			if ( chunk.CheckRayIntersection ( ray, intersection.block, intersection.normal, intersection.distance ) )
 				blockIntersections.push_back ( intersection );
 		}
 
 		block = nullptr;
-		faceDirection = Directions::down;
+		normal = glm::zero <glm::vec3> ();
 		distance = std::numeric_limits <float>::infinity ();
 
 		for ( auto const & blockIntersection : blockIntersections )
@@ -216,7 +221,7 @@ namespace mpp
 			if ( blockIntersection.distance < distance )
 			{
 				block = blockIntersection.block;
-				faceDirection = blockIntersection.faceDirection;
+				normal = blockIntersection.normal;
 				distance = blockIntersection.distance;
 			}
 		}

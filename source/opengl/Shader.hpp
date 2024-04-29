@@ -20,9 +20,13 @@ namespace mpp
 		void SetUniform ( std::string const &, std::vector <glm::mat4> const & );
 		void SetUniform ( std::string const &, glm::vec4 const & );
 
+		GLuint GetUniformBlockIndex ( std::string const & name );
+		void SetUniformBlockBinding ( std::string const & name, GLuint binding );
+
 	private:
 		GLint GetUniformLocation ( std::string const & );
 		GLuint program;
 		std::unordered_map < std::string, GLint > uniformLocations;
+		std::unordered_map < std::string, GLuint > uniformBlockIndices;
 	};
 }

@@ -45,7 +45,7 @@ namespace mpp
 		void OnButtonAction ( int button, int action );
 		void RenderCrosshair ();
 		void HandleSelection ();
-		bool CheckRayIntersectionWithBlock ( Ray const &, Block const * & block, Directions & faceDirection, float & distance );
+		bool CheckRayIntersectionWithBlock ( Ray const &, Block const * & block, glm::vec3 &, float & distance );
 
 		Application * application;
 		Window * window;
@@ -55,7 +55,7 @@ namespace mpp
 		std::list <Chunk> chunks;
 		BlockThumbnailRenderer blockThumbnailRenderer;
 		Block * selectedBlock { nullptr };
-		Directions selectedBlockFaceDirection;
+		glm::vec3 selectedBlockFaceNormal;
 		RectangleRenderer rectangleRenderer;
 		TextRenderer textRenderer;
 		Inventory playerInventory;

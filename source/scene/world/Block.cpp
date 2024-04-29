@@ -7,12 +7,14 @@
 #include "../world/World.hpp"
 #include "../world/WorldCache.hpp"
 #include "../world/BlockCache.hpp"
+#include "../../core/Utility.hpp"
 
 namespace mpp
 {
 	Block::Block ( Chunk & chunk, std::string const & type, glm::vec3 const & position )
-		: chunk ( & chunk ), type (type), transform (position)
+		: chunk ( & chunk ), type (type), position (position)
 	{
+		transform = CombineTransforms ( position, { 1.0f, 1.0f, 1.0f } );
 	}
 	
 	void Block::Render () const
@@ -22,9 +24,10 @@ namespace mpp
 
 		auto & worldCache { chunk->GetWorld ().GetCache () };
 
-		worldCache.shader.SetUniform ( "u_modelMatrix", transform.GetMatrix () );
-
+		worldCache.shader.SetUniform ( "u_sampler", 0 );
 		worldCache.blockCache->GetBlockTexture ( type ).Bind ( 0 );
+		
+		worldCache.shader.SetUniform ( "u_modelMatrix", transform );
 
 		worldCache.shader.SetUniform ( "u_useMask", highlighted );
 
@@ -37,61 +40,19 @@ namespace mpp
 		glDrawElements ( GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0 );
 	}
 
-	bool Block::CheckRayIntersection ( Ray const & ray, Directions & faceDirection, float & distance ) const
+	bool Block::CheckRayIntersection ( Ray const & ray, glm::vec3 & faceNormal, float & distance ) const
 	{
 		if ( type == "Air" )
 			return false;
 		
-		auto & worldCache { chunk->GetWorld ().GetCache () };
+		float sphereRadius { glm::length ( glm::vec3 { 1.0f, 1.0f, 1.0f } ) };
+		float sphereIntersectDistance;
+		if ( ! glm::intersectRaySphere ( ray.origin, ray.direction, position, sphereRadius * sphereRadius, sphereIntersectDistance ) )
+			return false;
 
-		struct FaceIntersection
-		{
-			Directions direction;
-			float distance;
-		};
+		if ( glm::distance ( ray.origin, position ) > glm::length ( ray.direction ) )
+			return false;
 
-		std::vector <FaceIntersection> faceIntersections;
-
-		for ( auto const & [faceDirection, faceTriangleIndices] : worldCache.blockIndices )
-		{
-			bool intersects { false };
-			float distance { 0.0f };
-
-			for ( auto const & triangleIndices : faceTriangleIndices )
-			{
-				glm::vec2 baryPosition;
-
-				intersects = glm::intersectRayTriangle ( ray.origin, ray.direction,
-					glm::vec3 { transform.GetMatrix () * glm::vec4 { worldCache.blockVertices [ triangleIndices [ 0 ] ], 1.0f } },
-					glm::vec3 { transform.GetMatrix () * glm::vec4 { worldCache.blockVertices [ triangleIndices [ 1 ] ], 1.0f } },
-					glm::vec3 { transform.GetMatrix () * glm::vec4 { worldCache.blockVertices [ triangleIndices [ 2 ] ], 1.0f } },
-					baryPosition,
-					distance
-				);
-
-				if ( intersects )
-					break;
-			}
-
-			if ( intersects )
-				faceIntersections.push_back ( { faceDirection, distance } );
-		}
-
-		if ( ! faceIntersections.empty () )
-		{
-			faceDirection = Directions::down;
-			distance = std::numeric_limits <float>::infinity ();
-
-			for ( auto const & faceIntersection : faceIntersections )
-			{
-				if ( faceIntersection.distance < distance )
-				{
-					faceDirection = faceIntersection.direction;
-					distance = faceIntersection.distance;
-				}
-			}
-		}
-
-		return ! faceIntersections.empty ();
+		return CheckRayIntersectBox ( ray, { position, { 1.0f, 1.0f, 1.0f } }, faceNormal, distance );
 	}
 }

@@ -20,4 +20,9 @@ namespace mpp
 	{
 		glBindBuffer ( target, buffer );
 	}
+
+	void Buffer::BindBase ( GLenum target, GLuint index )
+	{
+		glBindBufferBase ( target, index, buffer );
+	}
 }

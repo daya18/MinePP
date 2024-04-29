@@ -129,4 +129,19 @@ namespace mpp
 
 		return locationIt->second;
 	}
+
+	GLuint Shader::GetUniformBlockIndex ( std::string const & name )
+	{
+		auto indexIt { uniformBlockIndices.find ( name ) };
+
+		if ( indexIt == uniformBlockIndices.end () )
+			indexIt = uniformBlockIndices.emplace ( name, glGetUniformBlockIndex ( program, name.data () ) ).first;
+
+		return indexIt->second;
+	}
+
+	void Shader::SetUniformBlockBinding ( std::string const & name, GLuint binding )
+	{
+		glUniformBlockBinding ( program, GetUniformBlockIndex ( name ), binding );
+	}
 }

@@ -13,32 +13,35 @@ namespace mpp
 	public:
 		Block ( Chunk &, std::string const & type, glm::vec3 const & position );
 
-		Transform const & GetTransform () const;
-		Transform & GetTransform ();
 		std::string const & GetType () const;
 		bool GetHighlighted () const;
 		
 		void SetType ( std::string const & );
 		void SetHighlighted ( bool );
-		bool CheckRayIntersection ( Ray const & ray, Directions & faceDirection, float & distance ) const;
+		bool CheckRayIntersection ( Ray const & ray, glm::vec3 & normal, float & distance ) const;
 		void Render () const;
 		void SetChunk ( Chunk & );
+		Chunk & GetChunk ();
+		glm::vec3 const & GetPosition () const;
+		glm::mat4 const & GetTransform () const;
 
 	private:
 		Chunk * chunk;
 		std::string type;
-		Transform transform;
+		glm::vec3 position;
+		glm::mat4 transform;
 		bool highlighted { false };
 	};
 
 
 
 	// Implementation
-	inline Transform const & Block::GetTransform () const { return transform; }
-	inline Transform & Block::GetTransform () { return transform; }
+	inline glm::mat4 const & Block::GetTransform () const { return transform; }
 	inline std::string const & Block::GetType () const { return type; }
 	inline bool Block::GetHighlighted () const { return highlighted; }
 	inline void Block::SetHighlighted ( bool highlighted ) { this->highlighted = highlighted; }
 	inline void Block::SetChunk ( Chunk & chunk ) { this->chunk = &chunk; }
 	inline void Block::SetType ( std::string const & type ) { this->type = type; }
+	inline glm::vec3 const & Block::GetPosition () const { return position; }
+	inline Chunk & Block::GetChunk () { return *chunk; }
 }

@@ -15,7 +15,7 @@ uniform mat4 u_projectionMatrix;
 
 void main ()
 {
-	gl_Position = u_projectionMatrix * u_viewMatrix * u_modelMatrix * vec4 ( i_position, 1.0f );
+	gl_Position = u_projectionMatrix * u_viewMatrix * u_modelMatrix vec4 ( i_position, 1.0f );
 	o_textureCoordinates = i_textureCoordinates;
 	o_maskTextureCoordinates = i_maskTextureCoordinates;
 }

@@ -13,7 +13,9 @@ namespace mpp
 		~Buffer ();
 
 		void SetData ( void const * data, unsigned int size, GLenum usage );
+		
 		void Bind ( GLenum target );
+		void BindBase ( GLenum target, GLuint index );
 
 		template < class ElementType >
 		void SetData ( std::vector <ElementType> const & elements, GLenum usage );
